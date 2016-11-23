@@ -1,0 +1,19 @@
+{
+  "agents": [
+    {
+      "app_name":"ADC"
+      "host_name":"Remote_server",
+      "host_ip":"localhost",
+      "metrics":"status,newrelic",
+      "user":"root",
+      "passwd":"king",
+      "port":"3306",
+      "status_nameprefix":"mysql.",
+      "newrelec_nameprefix":"mysql.",
+      "dbhost":"52.8.104.253",
+      "dbport":"4343",
+      "filepath":"config/mysqlmetrics.csv",
+       
+    }
+  ]
+}

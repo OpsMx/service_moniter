@@ -1,0 +1,1 @@
+MY_TIME %{MONTHDAY:day} %{MONTH:month} %{YEAR:year} %{TIME:time}

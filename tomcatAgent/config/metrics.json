@@ -1,0 +1,39 @@
+{
+  "tomcat": [
+    {
+      "app_name":"OIQ",
+      "host_name":"insure-qa",
+      "host_ip":"localhost_IP",
+      "port":"8080",
+      "kairodb_name"    : "n42-DB",
+      "kairodb_host"    : "52.8.104.253",
+      "kairodb_port"	: "4343",
+      "time_interval" 	: "5000",
+      "jmxport"		:"1099",
+      "file_path"       :"config/N42Metrics.txt"     
+     
+    }
+  ],
+  "metrics":[
+    		 {"attribute":"Uptime","jmxObject":"java.lang:type=Runtime"},
+     		 {"attribute":"HeapMemoryUsage","jmxObject":"java.lang:type=Memory"},
+     		 {"attribute":"NonHeapMemoryUsage","jmxObject":"java.lang:type=Memory"},
+     		 {"attribute":"ThreadCount","jmxObject":"java.lang:type=Threading"},
+    	     {"attribute":"rejectedSessions","jmxObject":"Catalina:context=/,host=localhost,type=Manager"},
+     		 {"attribute":"activeSessions","jmxObject":"Catalina:context=/,host=localhost,type=Manager"},
+      		 {"attribute":"sessionCreateRate","jmxObject":"Catalina:context=/,host=localhost,type=Manager"},
+      		 {"attribute":"processingTime","jmxObject":"Catalina:name=\"http-bio-xxxx\",type=GlobalRequestProcessor"},
+      		 {"attribute":"requestCount","jmxObject":"Catalina:name=\"http-bio-xxxx\",type=GlobalRequestProcessor"},
+      		 {"attribute":"bytesSent","jmxObject":"Catalina:name=\"http-bio-xxxx\",type=GlobalRequestProcessor"},
+		 {"attribute":"bytesReceived","jmxObject":"Catalina:name=\"http-bio-xxxx\",type=GlobalRequestProcessor"},	
+	 {"attribute":"processingTime","jmxObject":"Catalina:J2EEApplication=none,J2EEServer=none,WebModule=//localhost/,j2eeType=Servlet,name=default"}, 
+		     {"attribute":"errorCount","jmxObject":"Catalina:name=\"http-bio-xxxx\",type=GlobalRequestProcessor"},
+		     {"attribute":"maxTime","jmxObject":"Catalina:name=\"http-bio-xxxx\",type=GlobalRequestProcessor"},
+	      {"attribute":"requestCount","jmxObject":"Catalina:J2EEApplication=none,J2EEServer=none,WebModule=//localhost/,j2eeType=Servlet,name=default"},
+		     {"attribute":"maxThreads","jmxObject":"Catalina:name=\"http-bio-xxxx\",type=ThreadPool"},
+		     {"attribute":"currentThreadsBusy","jmxObject":"Catalina:name=\"http-bio-xxxx\",type=ThreadPool"},
+		     {"attribute":"currentThreadCount","jmxObject":"Catalina:name=\"http-bio-xxxx\",type=ThreadPool"},
+
+		    
+  ]
+ }
