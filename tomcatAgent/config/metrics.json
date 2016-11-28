@@ -3,8 +3,8 @@
     {
       "app_name":"OIQ",
       "host_name":"insure-qa",
-      "host_ip":"localhost_IP",
-      "port":"8080",
+      "host_ip":"localhost",
+      "port":"8081",
       "kairodb_name"    : "n42-DB",
       "kairodb_host"    : "52.8.104.253",
       "kairodb_port"	: "4343",

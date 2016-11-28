@@ -2,7 +2,7 @@
   "agents": [
     {
       "app_name":"ADC"
-      "host_name":"Remote_server",
+      "host_name":"mysql_server",
       "host_ip":"localhost",
       "metrics":"status,newrelic",
       "user":"root",
