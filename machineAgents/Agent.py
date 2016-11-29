@@ -1,6 +1,11 @@
 import time
 import subprocess
 
+try:
+ import potsdb
+except:
+  subprocess.call("pip install potsdb",shell=True)
+
 checks = ["python /opt/agents/monitor/SystemCheck.py","python /opt/agents/monitor/NetworkCheck.py"]
 
 if __name__ == "__main__":
