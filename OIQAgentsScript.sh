@@ -11,7 +11,6 @@ TOMCAT_CONF="metrics.json"
 TOMCAT_LOG4="log4j.properties"
 TOMCAT_AGENT="N42tomcatAgent.jar"
 TOMCAT_SERV_LOG="N42Metrics.txt"
-TOMCAT_AGENT_LOG="N42TomcatMetrics.log"
 TOMCAT_THREADS="threadCount.sh"
 
 ##mysql details ##############
@@ -51,7 +50,6 @@ PATTREN_DIR="/opt/logstash/patterns"
 		wget -q -O "$TOMCAT_AGENT" 'https://rawgit.com/OpsMx/service_moniter/master/tomcatAgent/N42tomcatAgent.jar'
 		wget -bqc -O "$TOMCAT_LOG4" 'https://rawgit.com/OpsMx/service_moniter/master/tomcatAgent/config/log4j.properties'
 		wget -bqc -O "$TOMCAT_SERV_LOG" 'https://github.com/OpsMx/service_moniter/blob/master/tomcatAgent/config/N42Metrics.txt'
-		wget -bqc -O "$TOMCAT_AGENT_LOG" 'https://rawgit.com/OpsMx/service_moniter/master/tomcatAgent/config/N42TomcatMetrics.log'
 		wget -bqc -O "$TOMCAT_THREADS" 'https://github.com/OpsMx/service_moniter/blob/master/tomcatAgent/threadCount.sh'
 		chmod +x "$TOMCAT_AGENT" "$TOMCAT_THREADS"
 
@@ -81,7 +79,6 @@ PATTREN_DIR="/opt/logstash/patterns"
 		  mv -v "$TOMCAT_CONF" "$ROOT_DIR/$AGENT_DIR/tomcatAgent/config/"
 		  mv -v "$TOMCAT_LOG4" "$ROOT_DIR/$AGENT_DIR/tomcatAgent/config/"
 		  mv -v "$TOMCAT_SERV_LOG" "$ROOT_DIR/$AGENT_DIR/tomcatAgent/config/"
-		  mv -v "$TOMCAT_AGENT_LOG" "$ROOT_DIR/$AGENT_DIR/tomcatAgent/config/"
 		 echo ""
 		 
 		echo "[----------  Checking tomcat server status ---------]"
