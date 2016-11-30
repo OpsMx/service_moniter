@@ -1,8 +1,8 @@
 {
   "agents": [
     {
-      "app_name":"ADC"
-      "host_name":"Remote_server",
+      "app_name":"OIQ"
+      "host_name":"mysql_server",
       "host_ip":"localhost",
       "metrics":"status,newrelic",
       "user":"root",
