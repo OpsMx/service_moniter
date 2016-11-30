@@ -11,6 +11,7 @@ TOMCAT_CONF="metrics.json"
 TOMCAT_LOG4="log4j.properties"
 TOMCAT_AGENT="N42tomcatAgent.jar"
 TOMCAT_SERV_LOG="N42Metrics.txt"
+TOMCAT_AGENT_LOG="N42TomcatMetrics.log"
 TOMCAT_THREADS="threadCount.sh"
 
 ##mysql details ##############
@@ -50,6 +51,7 @@ PATTREN_DIR="/opt/logstash/patterns"
 		wget -q -O "$TOMCAT_AGENT" 'https://rawgit.com/OpsMx/service_moniter/master/tomcatAgent/N42tomcatAgent.jar'
 		wget -bqc -O "$TOMCAT_LOG4" 'https://rawgit.com/OpsMx/service_moniter/master/tomcatAgent/config/log4j.properties'
 		wget -bqc -O "$TOMCAT_SERV_LOG" 'https://github.com/OpsMx/service_moniter/blob/master/tomcatAgent/config/N42Metrics.txt'
+		wget -bqc -O "$TOMCAT_AGENT_LOG" 'https://rawgit.com/OpsMx/service_moniter/master/tomcatAgent/config/N42TomcatMetrics.log'
 		wget -bqc -O "$TOMCAT_THREADS" 'https://github.com/OpsMx/service_moniter/blob/master/tomcatAgent/threadCount.sh'
 		chmod +x "$TOMCAT_AGENT" "$TOMCAT_THREADS"
 
@@ -79,6 +81,7 @@ PATTREN_DIR="/opt/logstash/patterns"
 		  mv -v "$TOMCAT_CONF" "$ROOT_DIR/$AGENT_DIR/tomcatAgent/config/"
 		  mv -v "$TOMCAT_LOG4" "$ROOT_DIR/$AGENT_DIR/tomcatAgent/config/"
 		  mv -v "$TOMCAT_SERV_LOG" "$ROOT_DIR/$AGENT_DIR/tomcatAgent/config/"
+		  mv -v "$TOMCAT_AGENT_LOG" "$ROOT_DIR/$AGENT_DIR/tomcatAgent/config/"
 		 echo ""
 		 
 		echo "[----------  Checking tomcat server status ---------]"
@@ -88,11 +91,23 @@ PATTREN_DIR="/opt/logstash/patterns"
 		if [ "${tomcatpid}" ]; then
 		   echo $tomcatpid
 		   jmxpid=$(ps aux | grep -v grep | grep jmx | awk 'NR==1{print $2}')
+		   ##if [ "${jmxpid}" ]; then
+		      #echo "$jmxpid"
+		   ##else
+		       #echo "[---------- Enabling jmx port -------------------]"
+		      ##CATALINA_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1088 -Dcom.sun.management.jmxremote.ssl=false -			 Dcom.sun.management.jmxremote.authenticate=false"
+		      #echo $CATALINA_OPTS
+		      #export -p $CATALINA_OPTS
+		      #echo "export is completed"
+		      ##kill -9 $tomcatpid
+		      ##service tomcat7 start
+		   ##fi
 		  echo "tomcat server is running"
 		else
 		  echo "tomcat server is not running! ..please start the tomcat server"
 
 		fi
+
 		echo "tomcat agent configration"
 		echo "tomcat server host(localhost)"
 		read host_ip
@@ -110,7 +125,7 @@ PATTREN_DIR="/opt/logstash/patterns"
 				TPID=`(ps aux | grep $TOMCAT_AGENT | grep -v grep)`
 				echo "$TPID"
 				if [ -z "$TPID" ];then
-				         #   `nohup $tomcatjar > \dev\null 2>&1 &`
+				            `nohup $tomcatjar > \dev\null 2>&1 &`
 				             echo $!
 				             echo `date` "tomcat agent running started"
 				else
@@ -193,8 +208,6 @@ PATTREN_DIR="/opt/logstash/patterns"
 		NAME="monitoragent"
 		SYSAGENT_DIR="/opt/agents/monitor"
 		echo ""
-
-		echo "[------ agent installation started ---------]"
 		if [ ! -w /etc/init.d ]; then
 		  echo ""
 		  echo "   mv \"$SERVICE_FILE\" \"/etc/init.d/$NAME\""
@@ -236,9 +249,9 @@ PATTREN_DIR="/opt/logstash/patterns"
 		  update-rc.d "$NAME" defaults
 		  echo ""
 		  #echo "service \"$NAME\" start"
-		  sudo `date` service "$NAME" start
+		  sudo  service "$NAME" start
 		  echo ""
-		  echo "!!!! System level agents installation succesful !"
+		  echo "!!! System level agents installation succesful !"
 		fi
 		echo ""
 		echo "[--------------Agent usage Instructions------------------]"
@@ -297,15 +310,11 @@ PATTREN_DIR="/opt/logstash/patterns"
   		mv -v "$LOGSTASH_RB" "$LOGSTASH_DIR$LOGSTASH_RB"
   		mv -v "$LOGSTASH_CONF" "$LOGSTASH_DIR$LOGSTASH_CONF"
   		mv -v "$LOGSTASH_PATTERNS" "$LOGSTASH_DIR$LOGSTASH_PATTERNS"
-
-		if [ ! -w /etc/logstash/conf.d ]; then
-		  echo ""
-		    cp $LOGSTASH_CONF \"/etc/logstash/conf.d\"
-		    cp $LOGSTASH_DIR/$LOGSTASH_PATTERNS  $PATTREN_DIR/$LOGSTASH_PATTERNS
-		    cp "$LOGSTASH_DIR$LOGSTASH_RB" "/opt/logstash/vendor/bundle/jruby/1.9/gems/logstash-output-opentsdb-2.0.4/lib/logstash/outputs/"$LOGSTASH_DIR$LOGSTASH_RB
-		fi
-		sudo `date` service logstash start
-		echo -n "!!! logstash installation succesful !"
+		cp  "$LOGSTASH_DIR$LOGSTASH_CONF"  "/etc/logstash/conf.d/"$LOGSTASH_CONF
+		cp  $LOGSTASH_DIR$LOGSTASH_PATTERNS  $PATTREN_DIR/$LOGSTASH_PATTERNS
+		cp "$LOGSTASH_DIR$LOGSTASH_RB" "/opt/logstash/vendor/bundle/jruby/1.9/gems/logstash-output-opentsdb-2.0.4/lib/logstash/outputs/"$LOGSTASH_RB
+		sudo service logstash start
+		echo  "!!! logstash installation succesful !"
 	
 	fi
 
