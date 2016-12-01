@@ -74,7 +74,7 @@ PATTREN_DIR="/opt/logstash/patterns"
 		       fi
 		  fi  
 		 echo ""
-		 echo "[----------  Copying the Agents  -----------]"   
+		 echo "[----------  Copying the tomcat Agent  -----------]"   
 		 echo ""
 		  mv -v "$TOMCAT_AGENT" "$ROOT_DIR/$AGENT_DIR/tomcatAgent/"
 		  mv -v "$TOMCAT_THREADS" "$ROOT_DIR/$AGENT_DIR/tomcatAgent/"
@@ -86,23 +86,28 @@ PATTREN_DIR="/opt/logstash/patterns"
 		 
 		echo "[----------  Checking tomcat server status ---------]"
 
-		###tomcatpid=$(ps x | grep "tomcat" | grep -v grep | cut -d ' ' -f 1)
-		tomcatpid=$(ps aux | grep -v grep | grep tomcat | awk 'NR==1{print $2}')
+		env_dir="/etc/environment"
+		tomcatpid=$(ps aux | grep -v grep | grep tomcat | awk 'NR==1{print $2}')      
 		if [ "${tomcatpid}" ]; then
-		   echo $tomcatpid
 		   jmxpid=$(ps aux | grep -v grep | grep jmx | awk 'NR==1{print $2}')
-		   ##if [ "${jmxpid}" ]; then
+		   if [ "${jmxpid}" ]; then
 		      #echo "$jmxpid"
-		   ##else
-		       #echo "[---------- Enabling jmx port -------------------]"
-		      ##CATALINA_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1088 -Dcom.sun.management.jmxremote.ssl=false -			 Dcom.sun.management.jmxremote.authenticate=false"
-		      #echo $CATALINA_OPTS
-		      #export -p $CATALINA_OPTS
-		      #echo "export is completed"
-		      ##kill -9 $tomcatpid
-		      ##service tomcat7 start
-		   ##fi
-		  echo "tomcat server is running"
+		      echo "tomcat server is running"
+		   else
+		     echo ""
+		     echo "[---------- enabling jmx port -----------------]"
+		     `unset CATALINA_OPTS`
+              echo 'CATALINA_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"' >> $env_dir
+               echo  "export CATALINA_OPTS" >> $env_dir        
+               `source $env_dir`
+               echo "jmx port enabled..."
+		       kill -9 $tomcatpid
+		       echo "please source the file like 'source $env_dir'"
+		       echo "start tomcat-server ..."
+		       echo ""
+		       ##start tomcat-server
+		      exit 0
+		   fi
 		else
 		  echo "tomcat server is not running! ..please start the tomcat server"
 
@@ -115,19 +120,26 @@ PATTREN_DIR="/opt/logstash/patterns"
 		echo "tomcat server port(8080)"
 		read port
 		sed -i '0,/8080/s//'$port'/' $ROOT_DIR/$AGENT_DIR/tomcatAgent/config/$TOMCAT_CONF
+		echo "tomcat server jmxport(1099)"
+		read jmxport
+		sed -i '0,/1099/s//'$jmxport'/' $ROOT_DIR/$AGENT_DIR/tomcatAgent/config/$TOMCAT_CONF
 		echo ""
 		cp -r "$ROOT_DIR/$AGENT_DIR/tomcatAgent/config/"  $ROOT_DIR
 
 		echo "[----------  tomcatagent starting process  --------------------]"  
 		echo ""
 				JAR_DIR=($ROOT_DIR/$AGENT_DIR/tomcatAgent/)
+				tomcat_thrds=$ROOT_DIR/$AGENT_DIR/tomcatAgent/$TOMCAT_THREADS
+				echo $tomcat_thrds
 				tomcatjar="java -jar $JAR_DIR$TOMCAT_AGENT"
 				TPID=`(ps aux | grep $TOMCAT_AGENT | grep -v grep)`
 				echo "$TPID"
 				if [ -z "$TPID" ];then
-				            `nohup $tomcatjar > \dev\null 2>&1 &`
-				             echo $!
-				             echo `date` "tomcat agent running started"
+				           `nohup $tomcatjar > \dev\null 2>&1 &`
+				           `nohup $tomcat_thrds > \dev\null 2>&1 &`
+				            echo $!
+							echo  "!!! tomcat agent installation succesful !"
+				            echo `date` "tomcat agent running started ..."
 				else
 				   echo "tomcat agent already running"             
 				fi
@@ -167,11 +179,11 @@ PATTREN_DIR="/opt/logstash/patterns"
 		
 		echo "mysql agent configration"
 		echo "mysql server host(localhost)"
-		read host_ip
-		sed -i '0,/localhost/s//'$host_ip'/' $ROOT_DIR/$AGENT_DIR/mysqlAgent/config/$MYSQL_CONF
+		read mhost_ip
+		sed -i '0,/localhost/s//'$mhost_ip'/' $ROOT_DIR/$AGENT_DIR/mysqlAgent/config/$MYSQL_CONF
 		echo "myql server port(3306)"
-		read port
-		sed -i '0,/3306/s//'$port'/' $ROOT_DIR/$AGENT_DIR/mysqlAgent/config/$MYSQL_CONF
+		read mport
+		sed -i '0,/3306/s//'$mport'/' $ROOT_DIR/$AGENT_DIR/mysqlAgent/config/$MYSQL_CONF
 		echo "myql server user(root)"
 		read user
 		sed -i '0,/root/s//'$user'/' $ROOT_DIR/$AGENT_DIR/mysqlAgent/config/$MYSQL_CONF
@@ -188,7 +200,8 @@ PATTREN_DIR="/opt/logstash/patterns"
 				if [ -z "$MPID" ];then
 				         `nohup $mysqljar > \dev\null 2>&1 &`
 				          echo $!
-				          echo `date` "MYSQL agent running started"
+				          echo  "!!! MYSQL agent installation succesful !"
+						  echo `date` "MYSQL agent running started"
 				else
 				   echo "MySQL agent already running"             
 				fi
@@ -311,7 +324,7 @@ PATTREN_DIR="/opt/logstash/patterns"
   		mv -v "$LOGSTASH_CONF" "$LOGSTASH_DIR$LOGSTASH_CONF"
   		mv -v "$LOGSTASH_PATTERNS" "$LOGSTASH_DIR$LOGSTASH_PATTERNS"
 		cp  "$LOGSTASH_DIR$LOGSTASH_CONF"  "/etc/logstash/conf.d/"$LOGSTASH_CONF
-		cp  $LOGSTASH_DIR$LOGSTASH_PATTERNS  $PATTREN_DIR/$LOGSTASH_PATTERNS
+		cp  "$LOGSTASH_DIR$LOGSTASH_PATTERNS"  "$PATTREN_DIR/$LOGSTASH_PATTERNS"
 		cp "$LOGSTASH_DIR$LOGSTASH_RB" "/opt/logstash/vendor/bundle/jruby/1.9/gems/logstash-output-opentsdb-2.0.4/lib/logstash/outputs/"$LOGSTASH_RB
 		sudo service logstash start
 		echo  "!!! logstash installation succesful !"
