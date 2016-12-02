@@ -26,14 +26,14 @@ For Tomcat agent reqirements
 
  
 10)Script will ask configuration details like tomcat host, port and jmx port
-after entering details script will give success message.
+after entering details, script will give success message.
 
 For mysql agent reqirements
 
 11)mysql-server is in running mode 
 
 12)Script will ask configuration details like mysql host , port , username and password
-after entering details script will give success message.
+after entering details, script will give success message.
 
 logstash requirements
 
