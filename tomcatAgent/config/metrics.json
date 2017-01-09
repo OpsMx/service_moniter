@@ -4,7 +4,7 @@
       "app_name":"opsmx",
       "host_name":"tomcat_host",
       "host_ip":"localhost",
-      "port":"8080",
+      "port":"8888",
       "kairodb_name"    : "kairos-DB",
       "kairodb_host"    : "52.8.104.253",
       "kairodb_port"	: "4343",
