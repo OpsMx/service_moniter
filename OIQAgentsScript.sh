@@ -85,34 +85,26 @@ PATTREN_DIR="/opt/logstash/patterns"
 		 echo ""
 		 
 		echo "[----------  Checking tomcat server status ---------]"
-
 		env_dir="/etc/environment"
-		tomcatpid=$(ps aux | grep -v grep | grep tomcat | awk 'NR==1{print $2}')      
-		if [ "${tomcatpid}" ]; then
-		   jmxpid=$(ps aux | grep -v grep | grep jmx | awk 'NR==1{print $2}')
-		   if [ "${jmxpid}" ]; then
-		      #echo "$jmxpid"
+		tomcat_pid() {
+		 echo `ps aux | grep org.apache.catalina.startup.Bootstrap | grep -v grep | awk '{ print $2 }'`
+	        }
+		TPID=$(tomcat_pid)  
+		if [ "$TPID" ]; then
 		      echo "tomcat server is running"
-		   else
-		     echo ""
-		     echo "[---------- enabling jmx port -----------------]"
-		     `unset CATALINA_OPTS`
-              echo 'CATALINA_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"' >> $env_dir
-               echo  "export CATALINA_OPTS" >> $env_dir        
-               `source $env_dir`
-               echo "jmx port enabled..."
-		       kill -9 $tomcatpid
-		       echo "please source the file like 'source $env_dir'"
-		       echo "start tomcat-server ..."
-		       echo ""
-		       ##start tomcat-server
-		      exit 0
-		   fi
 		else
-		  echo "tomcat server is not running! ..please start the tomcat server"
-
+		   echo ""
+		   echo "[---------- enabling jmx port -----------------]"
+		   `unset CATALINA_OPTS`
+            echo 'CATALINA_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"' >> $env_dir
+            echo  "export CATALINA_OPTS" >> $env_dir        
+            `source $env_dir`
+		       kill -9 "$TPID"
+		       echo "please source the file like 'source $env_dir'"
+		       echo "start tomcat-server manully..."
+		       exit 0
 		fi
-
+		
 		echo "tomcat agent configration"
 		echo "tomcat server host(localhost)"
 		read host_ip
@@ -132,9 +124,9 @@ PATTREN_DIR="/opt/logstash/patterns"
 				tomcat_thrds=$ROOT_DIR/$AGENT_DIR/tomcatAgent/$TOMCAT_THREADS
 				echo $tomcat_thrds
 				tomcatjar="java -jar $JAR_DIR$TOMCAT_AGENT"
-				TPID=`(ps aux | grep $TOMCAT_AGENT | grep -v grep)`
-				echo "$TPID"
-				if [ -z "$TPID" ];then
+				TGPID=`(ps aux | grep $TOMCAT_AGENT | grep -v grep)`
+				echo "$TGPID"
+				if [ -z "$TGPID" ];then
 				           `nohup $tomcatjar > \dev\null 2>&1 &`
 				           `nohup $tomcat_thrds > \dev\null 2>&1 &`
 				            echo $!
