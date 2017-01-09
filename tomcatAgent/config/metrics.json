@@ -1,15 +1,15 @@
 {
   "tomcat": [
     {
-      "app_name":"OIQ",
-      "host_name":"insure-qa",
+      "app_name":"opsmx",
+      "host_name":"tomcat_host",
       "host_ip":"localhost",
       "port":"8080",
       "kairodb_name"    : "kairos-DB",
       "kairodb_host"    : "52.8.104.253",
       "kairodb_port"	: "4343",
       "time_interval" 	: "5000",
-      "jmxport"		:"1099",
+      "jmxport"		:"9012",
       "file_path"       :"config/N42Metrics.txt"     
      
     }
