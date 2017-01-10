@@ -322,7 +322,9 @@ PATTREN_DIR="/opt/logstash/patterns"
 		sudo cp "$LOGSTASH_DIR$LOGSTASH_RB" "/opt/logstash/vendor/bundle/jruby/1.9/gems/logstash-output-opentsdb-2.0.4/lib/logstash/outputs/"$LOGSTASH_RB
                 sudo service logstash start
                 echo  "!! logstash installation succesful !"
-
     fi
 echo ""	
-echo "@@@@@@@@@@@@ Thanks for installing opsmx-agents @@@@@@@@@@@@@@@@@@"	
+echo "@@@@@@@@@@@@ Thanks for installing opsmx-agents @@@@@@@@@@@@@@@@@@"
+echo ""
+
+
