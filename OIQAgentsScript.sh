@@ -150,7 +150,7 @@ PATTREN_DIR="/opt/logstash/patterns"
 		chmod +x "$MYSQL_AGENT"
 		echo ""
 		
-		if [[ ! -e $ROOT_DIR/$AGENT_DIR ]]; 
+		if [ ! -e $ROOT_DIR/$AGENT_DIR ]; 
 		  then	
 		    mkdir -p $ROOT_DIR/$AGENT_DIR/mysqlAgent/config
 		       if [ $? -ne 0 ];
@@ -233,7 +233,7 @@ PATTREN_DIR="/opt/logstash/patterns"
 		      rm /etc/init.d/monitoragent        
 		  fi
 		  echo ""
-		  if [[ ! -e $SYSAGENT_DIR/ ]]; 
+		  if [ ! -e $SYSAGENT_DIR/ ]; 
 		  then
 		       mkdir -p $SYSAGENT_DIR/
 		       if [ $? -ne 0 ];
@@ -301,7 +301,7 @@ PATTREN_DIR="/opt/logstash/patterns"
 		wget -qO "$LOGSTASH_CONF" 'https://rawgit.com/OpsMx/service_moniter/master/logstash/opsmx-oiq.conf'
 		wget -bqcO "$LOGSTASH_PATTERNS" 'https://rawgit.com/OpsMx/service_moniter/master/logstash/opsmx-patterns'
 
-		if [[ ! -e $LOGSTASH_DIR ]]; 
+		if [ ! -e $LOGSTASH_DIR ]; 
   		then	
     		    mkdir -p $LOGSTASH_DIR
     		    mkdir -p $PATTREN_DIR
