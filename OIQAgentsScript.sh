@@ -87,7 +87,7 @@ PATTREN_DIR="/opt/logstash/patterns"
                 }
                 TPID=$(tomcat_pid)
                 if [ "$TPID" ];
-                                 then
+                 then
                       echo "tomcat server is running"
                 else
                    echo ""
@@ -325,3 +325,4 @@ PATTREN_DIR="/opt/logstash/patterns"
 echo ""
 echo "@@@@@@@@@@@@ Thanks for installing opsmx-agents @@@@@@@@@@@@@@@@@@"
 echo ""
+:
