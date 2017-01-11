@@ -10,7 +10,6 @@ TOMCAT_CONF="metrics.json"
 TOMCAT_LOG4="log4j.properties"
 TOMCAT_AGENT="N42tomcatAgent.jar"
 TOMCAT_SERV_LOG="N42Metrics.txt"
-TOMCAT_AGENT_LOG="N42TomcatMetrics.log"
 TOMCAT_THREADS="threadCount.sh"
 
 ##mysql details ##############
@@ -50,7 +49,6 @@ PATTREN_DIR="/opt/logstash/patterns"
                 wget -q -O "$TOMCAT_AGENT" 'https://rawgit.com/OpsMx/service_moniter/master/tomcatAgent/N42tomcatAgent.jar'
                 wget -bqc -O "$TOMCAT_LOG4" 'https://rawgit.com/OpsMx/service_moniter/master/tomcatAgent/config/log4j.properties'
                 wget -bqc -O "$TOMCAT_SERV_LOG" 'https://github.com/OpsMx/service_moniter/blob/master/tomcatAgent/config/N42Metrics.txt'
-                wget -bqc -O "$TOMCAT_AGENT_LOG" 'https://rawgit.com/OpsMx/service_moniter/master/tomcatAgent/config/N42TomcatMetrics.log'
                 wget -bqc -O "$TOMCAT_THREADS" 'https://github.com/OpsMx/service_moniter/blob/master/tomcatAgent/threadCount.sh'
                 chmod +x "$TOMCAT_AGENT" "$TOMCAT_THREADS"
 
@@ -80,7 +78,6 @@ PATTREN_DIR="/opt/logstash/patterns"
                   mv -v "$TOMCAT_CONF" "$ROOT_DIR/$AGENT_DIR/tomcatAgent/config/"
                   mv -v "$TOMCAT_LOG4" "$ROOT_DIR/$AGENT_DIR/tomcatAgent/config/"
                   mv -v "$TOMCAT_SERV_LOG" "$ROOT_DIR/$AGENT_DIR/tomcatAgent/config/"
-                  mv -v "$TOMCAT_AGENT_LOG" "$ROOT_DIR/$AGENT_DIR/tomcatAgent/config/"
                  echo ""
 
                 echo "[----------  Checking tomcat server status ---------]"
@@ -89,20 +86,20 @@ PATTREN_DIR="/opt/logstash/patterns"
                  echo `ps aux | grep org.apache.catalina.startup.Bootstrap | grep -v grep | awk '{ print $2 }'`
                 }
                 TPID=$(tomcat_pid)
-                if [ "$TPID" ]; 
-				 then
+                if [ "$TPID" ];
+                                 then
                       echo "tomcat server is running"
                 else
                    echo ""
                    echo "[---------- enabling jmx port -----------------]"
                    `unset CATALINA_OPTS`
-		    echo 'CATALINA_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"' >> $env_dir
-		    echo  "export CATALINA_OPTS" >> $env_dir
-			`source $env_dir`
-                       kill -9 "$TPID"
-                       echo "please source the file like 'source $env_dir'"
-                       echo "please start tomcat-server manaully..."
-                       exit 0
+                   echo 'CATALINA_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"' >> $env_dir
+                   echo  "export CATALINA_OPTS" >> $env_dir
+                   `source $env_dir`
+                    kill -9 "$TPID"
+                    echo "please source the file like 'source $env_dir'"
+                    echo "please start tomcat-server manaully..."
+                    exit 0
                 fi
 
                 echo "tomcat agent configration"
@@ -164,12 +161,11 @@ PATTREN_DIR="/opt/logstash/patterns"
                echo ""
                 mv -v "$MYSQL_AGENT" "$ROOT_DIR/$AGENT_DIR/mysqlAgent/"
                 mv -v "$MYSQL_CONF" "$ROOT_DIR/$AGENT_DIR/mysqlAgent/config/"
-                ## mv -v "$MYSQL_LOG4" "$ROOT_DIR/$AGENT_DIR/mysqlAgent/config/"
                 mv -v "$MYSQL_NEWRELIC_CONF" "$ROOT_DIR/$AGENT_DIR/mysqlAgent/config/"
                 mv -v "$MYSQL_METRIC_CAT" "$ROOT_DIR/$AGENT_DIR/mysqlAgent/config/"
                 echo ""
 
-		echo "mysql agent configration"
+                echo "mysql agent configration"
                 echo "mysql server host(localhost)"
                 read mhost_ip
                 sed -i '0,/localhost/s//'$mhost_ip'/' $ROOT_DIR/$AGENT_DIR/mysqlAgent/config/$MYSQL_CONF
@@ -264,8 +260,6 @@ PATTREN_DIR="/opt/logstash/patterns"
                 echo "To stop the agent : service monitoragent stop"
                 echo "To uninstall the agent : service monitoragent uninstall"
                 echo "[--------------------------------------------------------]"
-
-
         fi
 
         echo -n "Are you sure you want to install logstash  <y/N> "
@@ -283,7 +277,8 @@ PATTREN_DIR="/opt/logstash/patterns"
                         if [ $? != 0 ];
                         then
                                  echo ""
-                                 echo -n "`date` logstash agent not found ! please wait installing in progress ..."
+                                 echo "`date` logstash agent not found !"
+                                 echo "please wait installing in progress ..."
                                  echo 'deb https://packages.elastic.co/logstash/2.4/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash.list
                                  sudo apt-get -y update
                                  sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D27D666CD88E42B4
@@ -305,26 +300,28 @@ PATTREN_DIR="/opt/logstash/patterns"
                 then
                     mkdir -p $LOGSTASH_DIR
                     mkdir -p $PATTREN_DIR
-		    echo "conf directories created"
                   if [ $? -ne 0 ];
                         then
-                        echo "Could not create directory : $LOGSTASH_DIR"
+                        echo "could not create directory : $LOGSTASH_DIR"
                         exit 1
                   fi
                 fi
-                echo "configuring logstash"
-                sudo service logstash stop
+                echo "configuring logstash .."
                 mv -v "$LOGSTASH_RB" "$LOGSTASH_DIR$LOGSTASH_RB"
                 mv -v "$LOGSTASH_CONF" "$LOGSTASH_DIR$LOGSTASH_CONF"
                 mv -v "$LOGSTASH_PATTERNS" "$LOGSTASH_DIR$LOGSTASH_PATTERNS"
-                sudo cp  "$LOGSTASH_DIR$LOGSTASH_CONF"  "/etc/logstash/conf.d/"$LOGSTASH_CONF
-		sudo cp `pwd`/logstash/$LOGSTASH_PATTERNS "$PATTREN_DIR/$LOGSTASH_PATTERNS"
-		sudo cp "$LOGSTASH_DIR$LOGSTASH_RB" "/opt/logstash/vendor/bundle/jruby/1.9/gems/logstash-output-opentsdb-2.0.4/lib/logstash/outputs/"$LOGSTASH_RB
+                sudo cp $LOGSTASH_DIR$LOGSTASH_CONF  "/etc/logstash/conf.d/"$LOGSTASH_CONF
+                sudo mv $LOGSTASH_DIR/$LOGSTASH_PATTERNS  $PATTREN_DIR/$LOGSTASH_PATTERNS
+                sudo cp $LOGSTASH_DIR$LOGSTASH_RB "/opt/logstash/vendor/bundle/jruby/1.9/gems/logstash-output-opentsdb-2.0.4/lib/logstash/outputs/"$LOGSTASH_RB
                 sudo service logstash start
-                echo  "!! logstash installation succesful !"
+                if [ $? -ne 0 ];
+                 then
+                  echo  "logstash not started properly..."
+                else
+                  echo "!! logstash installation succesful !"
+                fi
+
     fi
-echo ""	
+echo ""
 echo "@@@@@@@@@@@@ Thanks for installing opsmx-agents @@@@@@@@@@@@@@@@@@"
 echo ""
-
-
