@@ -113,6 +113,7 @@ PATTREN_DIR="/opt/logstash/patterns"
                 read jmxport
                 sed -i '0,/1099/s//'$jmxport'/' $ROOT_DIR/$AGENT_DIR/tomcatAgent/config/$TOMCAT_CONF
                 echo ""
+                rm -rf $ROOT_DIR/config  $ROOT_DIR/logs
                 cp -r "$ROOT_DIR/$AGENT_DIR/tomcatAgent/config/"  $ROOT_DIR
 
                 echo "[----------  tomcatagent starting process  --------------------]"
@@ -179,6 +180,7 @@ PATTREN_DIR="/opt/logstash/patterns"
                 echo "myql server password"
                 read pwd
                 sed -i '0,/king/s//'$pwd'/' $ROOT_DIR/$AGENT_DIR/mysqlAgent/config/$MYSQL_CONF
+                rm -rf $ROOT_DIR/config 
                 cp -r "$ROOT_DIR/$AGENT_DIR/mysqlAgent/config/"  $ROOT_DIR
                 echo ""
                 echo "[----------  Mysqlagent starting process  --------------------]"
