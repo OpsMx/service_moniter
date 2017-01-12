@@ -279,7 +279,7 @@ PATTREN_DIR="/opt/logstash/patterns"
                                  echo ""
                                  echo "`date` logstash agent not found !"
                                  echo "please wait installing in progress ..."
-                                 echo 'deb https://packages.elastic.co/logstash/2.4/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash.list
+                                 echo 'deb http://packages.elastic.co/logstash/2.4/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash.list
                                  sudo apt-get -y update
                                  sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D27D666CD88E42B4
                                  sudo apt-get -y update
@@ -311,7 +311,7 @@ PATTREN_DIR="/opt/logstash/patterns"
                 mv -v "$LOGSTASH_CONF" "$LOGSTASH_DIR$LOGSTASH_CONF"
                 mv -v "$LOGSTASH_PATTERNS" "$LOGSTASH_DIR$LOGSTASH_PATTERNS"
                 sudo cp $LOGSTASH_DIR$LOGSTASH_CONF  "/etc/logstash/conf.d/"$LOGSTASH_CONF
-                sudo mv $LOGSTASH_DIR/$LOGSTASH_PATTERNS  $PATTREN_DIR/$LOGSTASH_PATTERNS
+                sudo mv $LOGSTASH_DIR$LOGSTASH_PATTERNS  $PATTREN_DIR/$LOGSTASH_PATTERNS
                 sudo cp $LOGSTASH_DIR$LOGSTASH_RB "/opt/logstash/vendor/bundle/jruby/1.9/gems/logstash-output-opentsdb-2.0.4/lib/logstash/outputs/"$LOGSTASH_RB
                 sudo service logstash start
                 if [ $? -ne 0 ];
