@@ -22,18 +22,16 @@
     	     {"attribute":"rejectedSessions","jmxObject":"Catalina:context=/,host=localhost,type=Manager"},
      		 {"attribute":"activeSessions","jmxObject":"Catalina:context=/,host=localhost,type=Manager"},
       		 {"attribute":"sessionCreateRate","jmxObject":"Catalina:context=/,host=localhost,type=Manager"},
-      		 {"attribute":"processingTime","jmxObject":"Catalina:name=\"http-bio-xxxx\",type=GlobalRequestProcessor"},
-      		 {"attribute":"requestCount","jmxObject":"Catalina:name=\"http-bio-xxxx\",type=GlobalRequestProcessor"},
-      		 {"attribute":"bytesSent","jmxObject":"Catalina:name=\"http-bio-xxxx\",type=GlobalRequestProcessor"},
-		 {"attribute":"bytesReceived","jmxObject":"Catalina:name=\"http-bio-xxxx\",type=GlobalRequestProcessor"},	
+      		 {"attribute":"processingTime","jmxObject":"Catalina:name=\"http-nio-xxxx\",type=GlobalRequestProcessor"},
+      		 {"attribute":"requestCount","jmxObject":"Catalina:name=\"http-nio-xxxx\",type=GlobalRequestProcessor"},
+      		 {"attribute":"bytesSent","jmxObject":"Catalina:name=\"http-nio-xxxx\",type=GlobalRequestProcessor"},
+		 {"attribute":"bytesReceived","jmxObject":"Catalina:name=\"http-nio-xxxx\",type=GlobalRequestProcessor"},	
 	 {"attribute":"processingTime","jmxObject":"Catalina:J2EEApplication=none,J2EEServer=none,WebModule=//localhost/,j2eeType=Servlet,name=default"}, 
-		     {"attribute":"errorCount","jmxObject":"Catalina:name=\"http-bio-xxxx\",type=GlobalRequestProcessor"},
-		     {"attribute":"maxTime","jmxObject":"Catalina:name=\"http-bio-xxxx\",type=GlobalRequestProcessor"},
+		     {"attribute":"errorCount","jmxObject":"Catalina:name=\"http-nio-xxxx\",type=GlobalRequestProcessor"},
+		     {"attribute":"maxTime","jmxObject":"Catalina:name=\"http-nio-xxxx\",type=GlobalRequestProcessor"},
 	      {"attribute":"requestCount","jmxObject":"Catalina:J2EEApplication=none,J2EEServer=none,WebModule=//localhost/,j2eeType=Servlet,name=default"},
-		     {"attribute":"maxThreads","jmxObject":"Catalina:name=\"http-bio-xxxx\",type=ThreadPool"},
-		     {"attribute":"currentThreadsBusy","jmxObject":"Catalina:name=\"http-bio-xxxx\",type=ThreadPool"},
-		     {"attribute":"currentThreadCount","jmxObject":"Catalina:name=\"http-bio-xxxx\",type=ThreadPool"},
-
+		     {"attribute":"maxThreads","jmxObject":"Catalina:name=\"http-nio-xxxx\",type=ThreadPool"},
+		     {"attribute":"currentThreadsBusy","jmxObject":"Catalina:name=\"http-nio-xxxx\",type=ThreadPool"},
 		    
   ]
  }
