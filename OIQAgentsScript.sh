@@ -332,7 +332,7 @@ PATTREN_DIR="/opt/logstash/patterns"
                 else
                   echo "!! logstash installation succesful !"
                 fi
-
+         fi
     fi
 echo ""
 echo "@@@@@@@@@@@@ Thanks for installing opsmx-agents @@@@@@@@@@@@@@@@@@"
