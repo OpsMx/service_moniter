@@ -305,19 +305,20 @@ PATTREN_DIR="/opt/logstash/patterns"
                                 sed '/export PATH HOME/!b;n;c\ \ export JAVACMD' /etc/init.d/logstash | sudo tee /etc/init.d/logstash > /dev/null
 
                         fi
-                  fi
+                 fi
                 wget -bqcO "$LOGSTASH_RB" 'https://rawgit.com/OpsMx/service_moniter/master/logstash/opentsdb.rb'
                 wget -qO "$LOGSTASH_CONF" 'https://rawgit.com/OpsMx/service_moniter/master/logstash/opsmx-oiq.conf'
                 wget -bqcO "$LOGSTASH_PATTERNS" 'https://rawgit.com/OpsMx/service_moniter/master/logstash/opsmx-patterns'
                         if [ ! -e $PATTREN_DIR/ ];
-                        then
+                         then
                             mkdir -p $PATTREN_DIR
                             echo " patrrren directory created"
-                          if [ $? -ne 0 ];
+                             if [ $? -ne 0 ];
                                 then
                                 echo "Could not create directory : $PATTREN_DIR"
                                 exit 1
-                          fi
+                             fi
+                         fi
                 echo "configuring logstash .."
                 mv -v "$LOGSTASH_RB" "$LOGSTASH_DIR$LOGSTASH_RB"
                 mv -v "$LOGSTASH_CONF" "$LOGSTASH_DIR$LOGSTASH_CONF"
@@ -332,7 +333,6 @@ PATTREN_DIR="/opt/logstash/patterns"
                 else
                   echo "!! logstash installation succesful !"
                 fi
-         fi
     fi
 echo ""
 echo "@@@@@@@@@@@@ Thanks for installing opsmx-agents @@@@@@@@@@@@@@@@@@"
