@@ -303,7 +303,7 @@ PATTREN_DIR="/opt/logstash/patterns"
                         fi
                  fi
                 wget -bqcO "$LOGSTASH_RB" 'https://rawgit.com/OpsMx/service_moniter/master/logstash/opentsdb.rb'
-                wget -qO "$LOGSTASH_CONF" 'https://rawgit.com/OpsMx/service_moniter/master/logstash/opsmx-oiq.conf'
+                wget -bqcO "$LOGSTASH_CONF" 'https://rawgit.com/OpsMx/service_moniter/master/logstash/opsmx-oiq.conf'
                 wget -bqcO "$LOGSTASH_PATTERNS" 'https://rawgit.com/OpsMx/service_moniter/master/logstash/opsmx-patterns'
                         if [ ! -e $PATTREN_DIR/ ];
                          then
