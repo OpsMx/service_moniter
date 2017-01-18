@@ -41,7 +41,6 @@ PATTREN_DIR="/opt/logstash/patterns"
         read tprompt
         if [ "$tprompt" = "y" ] || [ "$tprompt" = "Y" ] || [ "$tprompt" = "yes" ] ||[ "$tprompt" = "Yes" ];
         then
-
                 echo ""
                 echo "[---------- Please wait downloading in process-----------------]"
                 echo " "
@@ -52,14 +51,12 @@ PATTREN_DIR="/opt/logstash/patterns"
                 wget -bqc -O "$TOMCAT_THREADS" 'https://github.com/OpsMx/service_moniter/blob/master/tomcatAgent/threadCount.sh'
                 chmod +x "$TOMCAT_AGENT" "$TOMCAT_THREADS"
 
-
                 ################  Creating agent directories  ########################
                 echo `date` agent directories created ...
                 if [ -f /$ROOT_DIR/$AGENT_DIR ];
                   then
                      rm -r $ROOT_DIR/$AGENT_DIR/
                      echo "removed old agents"
-
                 fi
                 if [ ! -e $ROOT_DIR/$AGENT_DIR ];
                   then
@@ -72,14 +69,13 @@ PATTREN_DIR="/opt/logstash/patterns"
                 fi
                  echo ""
                  echo "[----------  Copying the tomcat Agent  -----------]"
-                 echo ""
+                  echo ""
                   mv -v "$TOMCAT_AGENT" "$ROOT_DIR/$AGENT_DIR/tomcatAgent/"
                   mv -v "$TOMCAT_THREADS" "$ROOT_DIR/$AGENT_DIR/tomcatAgent/"
                   mv -v "$TOMCAT_CONF" "$ROOT_DIR/$AGENT_DIR/tomcatAgent/config/"
                   mv -v "$TOMCAT_LOG4" "$ROOT_DIR/$AGENT_DIR/tomcatAgent/config/"
                   mv -v "$TOMCAT_SERV_LOG" "$ROOT_DIR/$AGENT_DIR/tomcatAgent/config/"
                  echo ""
-
                 echo "[----------  Checking tomcat server status ---------]"
                 env_dir="/etc/environment"
                 tomcat_pid() {
@@ -221,19 +217,19 @@ PATTREN_DIR="/opt/logstash/patterns"
                 else
                   echo "[------------Agent Cleanup Started -----------]"
                   if service --status-all | grep -Fq 'monitoragent';
-                  then
+                   then
                        service monitoragent stop
                        echo "Please type yes as the answer as we are removing old Agents"
                        service monitoragent uninstall
-                  fi
+                   fi
                   if [ -f $SYSAGENT_DIR/$SYS_AGENT ];
-                  then
+                   then
                       rm -r $SYSAGENT_DIR/
                       rm /etc/init.d/monitoragent
                   fi
                   echo ""
                   if [ ! -e $SYSAGENT_DIR/ ];
-                  then
+                   then
                        mkdir -p $SYSAGENT_DIR/
                        if [ $? -ne 0 ];
                        then
@@ -271,14 +267,14 @@ PATTREN_DIR="/opt/logstash/patterns"
          then
                 LOGSTASH_PID=`ps aux | grep -v "grep" | grep "logstash" | awk 'NR==1{print $2}' | cut -d' ' -f1`
                 if [ "$LOGSTASH_PID" ] > /dev/null
-                then
+                  then
                         echo -n `date` "logstash agent is already running"
                         sudo service logstash stop
                         echo -n `date` "stopping logstash"
                 else
                         dpkg --get-selections | grep -v deinstall | grep -v forwarder | grep -w logstash > /dev/null
                         if [ $? != 0 ];
-                        then
+                         then
                                  echo ""
                                  echo "`date` logstash agent not found !"
                                  echo "please wait installing in progress ..."
