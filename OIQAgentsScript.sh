@@ -283,6 +283,17 @@ PATTREN_DIR="/opt/logstash/patterns"
                                  echo "`date` logstash agent not found !"
                                  echo "please wait installing in progress ..."
                                  echo 'deb http://packages.elastic.co/logstash/2.4/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash.list
+                                 rm -rf /etc/init.d/logstash
+                                 rm -rf /etc/defalut/logstash
+                                 if [ ! -e $LOGSTASH_DIR ];
+                                        then
+                                          mkdir -p $LOGSTASH_DIR
+                                         if [ $? -ne 0 ];
+                                            then
+                                            echo "could not create directory : $LOGSTASH_DIR"
+                                             exit 1
+                                         fi
+                                 fi
                                  sudo apt-get -y update
                                  sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D27D666CD88E42B4
                                  sudo apt-get -y update
@@ -298,24 +309,22 @@ PATTREN_DIR="/opt/logstash/patterns"
                 wget -bqcO "$LOGSTASH_RB" 'https://rawgit.com/OpsMx/service_moniter/master/logstash/opentsdb.rb'
                 wget -qO "$LOGSTASH_CONF" 'https://rawgit.com/OpsMx/service_moniter/master/logstash/opsmx-oiq.conf'
                 wget -bqcO "$LOGSTASH_PATTERNS" 'https://rawgit.com/OpsMx/service_moniter/master/logstash/opsmx-patterns'
-
-                if [ ! -e $LOGSTASH_DIR || ! -e $PATTREN_DIR ];
-                then
-                    mkdir -p $LOGSTASH_DIR
-                    mkdir -p $PATTREN_DIR
-                  if [ $? -ne 0 ];
+                        if [ ! -e $PATTREN_DIR/ ];
                         then
-                        echo "could not create directory : $LOGSTASH_DIR"
-                        exit 1
-                  fi
-                fi
+                            mkdir -p $PATTREN_DIR
+                            echo " patrrren directory created"
+                          if [ $? -ne 0 ];
+                                then
+                                echo "Could not create directory : $PATTREN_DIR"
+                                exit 1
+                          fi
                 echo "configuring logstash .."
                 mv -v "$LOGSTASH_RB" "$LOGSTASH_DIR$LOGSTASH_RB"
                 mv -v "$LOGSTASH_CONF" "$LOGSTASH_DIR$LOGSTASH_CONF"
                 mv -v "$LOGSTASH_PATTERNS" "$LOGSTASH_DIR$LOGSTASH_PATTERNS"
-                sudo cp $LOGSTASH_DIR$LOGSTASH_CONF  "/etc/logstash/conf.d/"$LOGSTASH_CONF
+                sudo mv $LOGSTASH_DIR$LOGSTASH_CONF  "/etc/logstash/conf.d/"$LOGSTASH_CONF
                 sudo mv $LOGSTASH_DIR$LOGSTASH_PATTERNS  $PATTREN_DIR/$LOGSTASH_PATTERNS
-                sudo cp $LOGSTASH_DIR$LOGSTASH_RB "/opt/logstash/vendor/bundle/jruby/1.9/gems/logstash-output-opentsdb-2.0.4/lib/logstash/outputs/"$LOGSTASH_RB
+                sudo mv $LOGSTASH_DIR$LOGSTASH_RB "/opt/logstash/vendor/bundle/jruby/1.9/gems/logstash-output-opentsdb-2.0.4/lib/logstash/outputs/"$LOGSTASH_RB
                 sudo service logstash start
                 if [ $? -ne 0 ];
                  then
@@ -328,4 +337,3 @@ PATTREN_DIR="/opt/logstash/patterns"
 echo ""
 echo "@@@@@@@@@@@@ Thanks for installing opsmx-agents @@@@@@@@@@@@@@@@@@"
 echo ""
-:
