@@ -308,7 +308,7 @@ PATTREN_DIR="/opt/logstash/patterns"
                         if [ ! -e $PATTREN_DIR/ ];
                          then
                             mkdir -p $PATTREN_DIR
-                            echo " patrrren directory created"
+                            echo " pattren directory created"
                              if [ $? -ne 0 ];
                                 then
                                 echo "Could not create directory : $PATTREN_DIR"
