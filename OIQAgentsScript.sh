@@ -33,7 +33,8 @@ LOGSTASH_RB="opentsdb.rb"
 LOGSTASH_CONF="opsmx-oiq.conf"
 LOGSTASH_PATTERNS="opsmx-patterns"
 
-LOGSTASH_DIR=$(dirname "$0")/logstash/
+
+LOGSTASH_DIR="logstash"
 PATTREN_DIR="/opt/logstash/patterns"
 
 
@@ -122,10 +123,12 @@ PATTREN_DIR="/opt/logstash/patterns"
                                 echo "$TGPID"
                                 if [ -z "$TGPID" ];then
                                            `nohup $tomcatjar > /dev/null 2>&1 &`
-                                           `nohup $tomcat_thrds > /dev/null 2>&1 &`
                                             echo $!
                                             echo  "!!! tomcat agent installation succesful !"
                                             echo `date` "tomcat agent running started ..."
+                                           `nohup $tomcat_thrds > /dev/null 2>&1 &`
+                                            echo $!
+                                            echo `date` "tomcat agent threads started ..."
                                 else
                                    echo "tomcat agent already running"
                                 fi
@@ -243,9 +246,6 @@ PATTREN_DIR="/opt/logstash/patterns"
                   mv -v "$NETW_AGENT" "$SYSAGENT_DIR/"
                   mv -v "$SERVICE_FILE" "/etc/init.d/$NAME"
                   echo "[------------Copying the Agents Ended --------------]"
-                  #echo "touch \"/var/log/myloop.log\""
-                  #touch "/var/log/$NAME.log" && chown "$USERNAME" "/var/log/$NAME.log"
-                  #echo "3. update-rc.d \"$NAME\" defaults"
                   update-rc.d "$NAME" defaults
                   echo ""
                   #echo "service \"$NAME\" start"
@@ -278,18 +278,9 @@ PATTREN_DIR="/opt/logstash/patterns"
                                  echo ""
                                  echo "`date` logstash agent not found !"
                                  echo "please wait installing in progress ..."
+                                 sudo rm -rf /etc/init.d/logstash
+                                 sudo rm -rf /etc/defalut/logstash
                                  echo 'deb http://packages.elastic.co/logstash/2.4/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash.list
-                                 rm -rf /etc/init.d/logstash
-                                 rm -rf /etc/defalut/logstash
-                                 if [ ! -e $LOGSTASH_DIR ];
-                                        then
-                                          mkdir -p $LOGSTASH_DIR
-                                         if [ $? -ne 0 ];
-                                            then
-                                            echo "could not create directory : $LOGSTASH_DIR"
-                                             exit 1
-                                         fi
-                                 fi
                                  sudo apt-get -y update
                                  sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D27D666CD88E42B4
                                  sudo apt-get -y update
@@ -305,9 +296,18 @@ PATTREN_DIR="/opt/logstash/patterns"
                 wget -bqcO "$LOGSTASH_RB" 'https://rawgit.com/OpsMx/service_moniter/master/logstash/opentsdb.rb'
                 wget -bqcO "$LOGSTASH_CONF" 'https://rawgit.com/OpsMx/service_moniter/master/logstash/opsmx-oiq.conf'
                 wget -bqcO "$LOGSTASH_PATTERNS" 'https://rawgit.com/OpsMx/service_moniter/master/logstash/opsmx-patterns'
+                       if [ ! -e $ROOT_DIR/$LOGSTASH_DIR ];
+                                        then
+                                          sudo mkdir -p $ROOT_DIR/$LOGSTASH_DIR
+                                         if [ $? -ne 0 ];
+                                            then
+                                            echo "could not create directory : $LOGSTASH_DIR"
+                                             exit 1
+                                         fi
+                                 fi
                         if [ ! -e $PATTREN_DIR/ ];
                          then
-                            mkdir -p $PATTREN_DIR
+                            sudo mkdir -p $PATTREN_DIR
                             echo " pattren directory created"
                              if [ $? -ne 0 ];
                                 then
@@ -316,12 +316,12 @@ PATTREN_DIR="/opt/logstash/patterns"
                              fi
                          fi
                 echo "configuring logstash .."
-                mv -v "$LOGSTASH_RB" "$LOGSTASH_DIR$LOGSTASH_RB"
-                mv -v "$LOGSTASH_CONF" "$LOGSTASH_DIR$LOGSTASH_CONF"
-                mv -v "$LOGSTASH_PATTERNS" "$LOGSTASH_DIR$LOGSTASH_PATTERNS"
-                sudo mv $LOGSTASH_DIR$LOGSTASH_CONF  "/etc/logstash/conf.d/"$LOGSTASH_CONF
-                sudo mv $LOGSTASH_DIR$LOGSTASH_PATTERNS  $PATTREN_DIR/$LOGSTASH_PATTERNS
-                sudo mv $LOGSTASH_DIR$LOGSTASH_RB "/opt/logstash/vendor/bundle/jruby/1.9/gems/logstash-output-opentsdb-2.0.4/lib/logstash/outputs/"$LOGSTASH_RB
+                sudo mv -v "$LOGSTASH_RB" "$ROOT_DIR/$LOGSTASH_DIR/$LOGSTASH_RB"
+                sudo mv -v "$LOGSTASH_CONF" "$ROOT_DIR/$LOGSTASH_DIR/$LOGSTASH_CONF"
+                sudo mv -v "$LOGSTASH_PATTERNS" "$ROOT_DIR/$LOGSTASH_DIR/$LOGSTASH_PATTERNS"
+                sudo mv $ROOT_DIR/$LOGSTASH_DIR/$LOGSTASH_CONF  "/etc/logstash/conf.d/"$LOGSTASH_CONF
+                sudo mv $ROOT_DIR/$LOGSTASH_DIR/$LOGSTASH_PATTERNS  $PATTREN_DIR/$LOGSTASH_PATTERNS
+                sudo mv $ROOT_DIR/$LOGSTASH_DIR/$LOGSTASH_RB "/opt/logstash/vendor/bundle/jruby/1.9/gems/logstash-output-opentsdb-2.0.4/lib/logstash/outputs/"$LOGSTASH_RB
                 sudo service logstash start
                 if [ $? -ne 0 ];
                  then
