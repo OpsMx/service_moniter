@@ -122,11 +122,11 @@ PATTREN_DIR="/opt/logstash/patterns"
                                 TGPID=`(ps aux | grep $TOMCAT_AGENT | grep -v grep)`
                                 echo "$TGPID"
                                 if [ -z "$TGPID" ];then
-                                           `nohup $tomcatjar > /dev/null 2>&1 &`
+                                            sudo `nohup $tomcatjar > /dev/null 2>&1 &`
                                             echo $!
                                             echo  "!!! tomcat agent installation succesful !"
                                             echo `date` "tomcat agent running started ..."
-                                           `nohup $tomcat_thrds > /dev/null 2>&1 &`
+                                            sudo `nohup $tomcat_thrds > /dev/null 2>&1 &`
                                             echo $!
                                             echo `date` "tomcat agent threads started ..."
                                 else
