@@ -1,7 +1,7 @@
 {
   "agents": [
     {
-      "app_name":"OIQ"
+      "app_name":"OIQ",
       "host_name":"mysql_server",
       "host_ip":"localhost",
       "metrics":"status,newrelic",
@@ -12,7 +12,7 @@
       "newrelec_nameprefix":"mysql.",
       "dbhost":"52.8.104.253",
       "dbport":"4343",
-      "filepath":"config/mysqlmetrics.csv",
+      "filepath":"config/mysqlmetrics.csv"
        
     }
   ]
