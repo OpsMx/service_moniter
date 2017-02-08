@@ -33,4 +33,5 @@
      echo "$NAME was not running and was started on `$DATE`" 
      ;;
     esac
+    sleep 1m
     done 
