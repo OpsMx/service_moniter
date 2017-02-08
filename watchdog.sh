@@ -16,7 +16,8 @@
     NOP=/bin/true
     DATE=/bin/date
     RM=/bin/rm
-
+    while true:
+    do
     $PS -ef|$GREP -v grep|$GREP $NAME >/dev/null 2>&1
     case "$?" in
      0)
@@ -28,4 +29,4 @@
      1)
      echo "$NAME is NOT RUNNING. Starting $NAME"
      $START 2>&1 >/dev/null &
-                                                                                                                            1,2           Top
+     done                                                                                                                      
