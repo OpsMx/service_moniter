@@ -16,21 +16,22 @@
     NOP=/bin/true
     DATE=/bin/date
     RM=/bin/rm
-    while true:
+    NOTICE=/tmp/watchdog.txt
+    while true;
     do
     $PS -ef|$GREP -v grep|$GREP $NAME >/dev/null 2>&1
     case "$?" in
      0)
      # It is running in this case so we do nothing.
-      echo "$NAME is RUNNING OK. Relax."
+      echo "$NAME is RUNNING OK. Relax.">>NOTICE
 
      $NOP
      ;;
      1)
      echo "$NAME is NOT RUNNING. Starting $NAME"
      $START 2>&1 >/dev/null &
-     NOTICE=/tmp/watchdog.txt
-     echo "$NAME was not running and was started on `$DATE`" 
+    
+     echo "$NAME was not running and was started on `$DATE`" >>NOTICE
      ;;
     esac
     sleep 1m
