@@ -9,7 +9,7 @@
     #
     # Revisions: 0.1 (20100506), 0.2 (20100507)
 
-    NAME=org.apache.catalina.startup.Bootstrap
+     NAME=org.apache.catalina.startup.Bootstrap
     START=/opt/apache-tomcat-7.0.72/bin/startup.sh
     GREP=/bin/grep
     PS=/bin/ps
@@ -29,4 +29,8 @@
      1)
      echo "$NAME is NOT RUNNING. Starting $NAME"
      $START 2>&1 >/dev/null &
-     done                                                                                                                      
+     NOTICE=/tmp/watchdog.txt
+     echo "$NAME was not running and was started on `$DATE`" 
+     ;;
+    esac
+    done 
