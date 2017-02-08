@@ -31,7 +31,7 @@
 		 {"attribute":"maxTime","jmxObject":"Catalina:name=\"http-nio-xxxx\",type=GlobalRequestProcessor"},
 	         {"attribute":"requestCount","jmxObject":"Catalina:J2EEApplication=none,J2EEServer=none,WebModule=//localhost/,j2eeType=Servlet,name=default"},
 		 {"attribute":"maxThreads","jmxObject":"Catalina:name=\"http-nio-xxxx\",type=ThreadPool"},
-		 {"attribute":"currentThreadsBusy","jmxObject":"Catalina:name=\"http-nio-xxxx\",type=ThreadPool"},
+		 {"attribute":"currentThreadsBusy","jmxObject":"Catalina:name=\"http-nio-xxxx\",type=ThreadPool"}
 
 		    
   ]
