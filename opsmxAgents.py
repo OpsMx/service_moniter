@@ -177,7 +177,7 @@ class MySQLAgent:
 
     def configuration(self):
         while True:
-            print bcolors.HEADER+"\n*****************MySQL Agent Configuration*****************"+bcolors.ENDC
+            print bcolors.HEADER+"\n*****************MySQL Agent Configuration*******************"+bcolors.ENDC
             host=raw_input("Please enter MySQL server host ip "+bcolors.OKBLUE+"[Default:localhost]>"+bcolors.ENDC)
             if not re.search(r'^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$',host) and host.strip() :
                 print bcolors.FAIL+"Invalid IP. Please try again!"+bcolors.ENDC
@@ -285,10 +285,9 @@ class LogstashAgent:
                     os.makedirs(os.path.join(agents_path,dir))
                 except:
                     pass
-            print "Downloading...",file
-            print "wget -bqc -O {} https://rawgit.com/OpsMx/service_moniter/master/logstash/{}".format(desired_path,file)
-            os.system("wget -bqc -O {} https://rawgit.com/OpsMx/service_moniter/master/logstash/{}".format(desired_path,file))
-            os.system("chmod 777 {}".format(os.path.join(desired_path,dir,file)))
+                print "Downloading...",file
+                os.system("wget -q -O {0} https://rawgit.com/OpsMx/service_moniter/master/logstash/{1}".format(desired_path,file))
+                os.system("chmod 777 {}".format(os.path.join(desired_path,dir,file)))
             
 
     def configure(self):
@@ -299,20 +298,22 @@ class LogstashAgent:
             logstash_pid=None
         if logstash_pid:
             self.downloader()
-            print "Installed"
-            os.system("sudo service logstash start")
+            print "Logstash Installed. Restarting"
+            os.system("sudo service logstash restart")
         else:
             if os.system("dpkg --get-selections | grep -v deinstall | grep -v forwarder | grep -w logstash")!=0:
-                print "Installing"
                 print "Logstash not found. Installing.."
                 os.system("sudo rm -rf /etc/init.d/logstash")
                 os.system("sudo rm -rf /etc/defalut/logstash")
+                os.system("rm -rf /var/lib/logstash/")
+                os.system("rm -rf /var/log/logstash/")
+                os.system("rm -rf /opt/logstash/")
                 with open("/etc/apt/sources.list.d/logstash.list","w") as f:
                     f.write("deb http://packages.elastic.co/logstash/2.4/debian stable main")
                 os.system("sudo apt-get -y update")
                 os.system("apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D27D666CD88E42B4")
                 os.system("sudo apt-get -y update")
-                os.system("sudo apt-get install -y logstash")
+                os.system("sudo apt-get install -y logstash --allow-unauthenticated")
                 os.system("service logstash stop")
             self.downloader()
             os.system("sudo service logstash restart")
@@ -364,7 +365,7 @@ if __name__=='__main__':
             help()
                 
     else:
-        print bcolors.BOLD+bcolors.HEADER+"*****************OpsMx Agent Installation Menu(For Ubuntu)*****************"+bcolors.ENDC
+        print bcolors.BOLD+bcolors.HEADER+"*****************OpsMx Agent Installation Menu(For Ubuntu)******************"+bcolors.ENDC
         print bcolors.OKBLUE+"NOTE: For system agent, please use 'service monitoragent <start/stop/restart>'"+bcolors.ENDC
         print bcolors.OKBLUE+"To control service agents use; python installer.py [status] [start | stop | restart tomcat | mysql]"+bcolors.ENDC
         print "Please select an option to install agent(s)"
