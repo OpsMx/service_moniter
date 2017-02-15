@@ -1,23 +1,23 @@
 
 OIQ Script Installtion
 
-1) Download the opsmxAgents.py file 
+1) Download the oiq_opsmxinstaller.py file 
 2) Give the permissons to execute like 
-   chmod +X opsmxAgents.py
+   chmod +X oiq_opsmxinstaller.py
 
 3) run the file in command prompt like
-     python opsmxAgents.py
+     python oiq_opsmxinstaller.py
   it will display the installer menu ,Enter according to your requirements
  
 4) if you want start one agent like tomcat run like this 
-    python installer.py start tomcat 
+    python oiq_opsmxinstaller.py start tomcat 
   Agents will ask configuration details like  host , port , username and password etc..	
  
 5) if you want stop agent run like this 
-    python installer.py stop tomcat 
+    python oiq_opsmxinstaller.py stop tomcat 
 	
 6) Status of agents run like this 
-    python opsmxAgents status
+    python oiq_opsmxinstaller.py status
 
 	
 7) logstash configuations 
