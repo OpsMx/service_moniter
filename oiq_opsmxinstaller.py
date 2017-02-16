@@ -332,6 +332,7 @@ class LogstashAgent:
                 os.system("service logstash stop")
             self.downloader()
             os.system("sudo service logstash restart")
+        print bcolors.BOLD+bcolors.WARNING+"NOTE: Please update log files location in config file (/etc/logstash/conf.d/) and set 'chmod 664' for those log files"+bcolors.ENDC
 
 def help():
     print bcolors.FAIL+"Invalid command line agruments"+bcolors.ENDC
