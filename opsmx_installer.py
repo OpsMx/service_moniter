@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 '''
 Author: OpsMx
 Description: Installs OpsMx agents in machine (Tomcat Agent, MySQL Agent, System Agent, Logstash Agent)
@@ -10,7 +11,6 @@ import json
 import sys
 import getpass
 import stat
-import shutil
 
 pwd=os.path.dirname(os.path.realpath(__file__))
 agents_path=os.path.join(pwd,"serviceAgents")
@@ -39,7 +39,7 @@ class Downloader:
                     os.system("wget -q -O /opt/agents/monitor/{} https://rawgit.com/OpsMx/service_moniter/master/{}/{}".format(file,dir,file))
             if not os.path.exists("/etc/init.d/monitoragent"):
                 os.system("wget -q -O /etc/init.d/monitoragent https://rawgit.com/OpsMx/service_moniter/master/machineAgents/monitoragent.sh")
-                os.chmod("/etc/init.d/monitoragent", stat.S_IXUSR)
+                os.chmod("/etc/init.d/monitoragent", 0o777)
         else:
             for file, dir in self.file_paths.items():
                 desired_path=os.path.join(agents_path,dir,file)
@@ -50,7 +50,7 @@ class Downloader:
                         pass
                     print "Downloading...",file
                     os.system("wget -q -O {0} https://rawgit.com/OpsMx/service_moniter/master/{1}/{2}".format(desired_path,dir,file))
-                    os.chmod(desired_path, stat.S_IXUSR)
+                    os.chmod(desired_path, 0o777)
 
 class TomcatAgent:
     def __init__(self):
@@ -61,16 +61,19 @@ class TomcatAgent:
                           "threadCount.sh":"tomcatAgent"}
         Downloader(self.config_path,False)
 
-    def configure(self):        
+    def configure(self):
+        print bcolors.HEADER+"\n*****************Tomcat Agent Installation*****************"+bcolors.ENDC
+        print bcolors.WARNING+"If JMX is running, enter existing JMX port. Otherwise, enter new JMX to set in environmental variable"+bcolors.ENDC
         while True:
-            print bcolors.HEADER+"\n*****************Tomcat Agent Configuration*****************"+bcolors.ENDC
-            host=raw_input("Please enter Tomcat server host ip ".ljust(40," ")+bcolors.OKBLUE+"[Default:localhost]>"+bcolors.ENDC)
-            if not re.search(r'^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$',host) and host.strip() :
+            print ""
+            host=raw_input("Please enter tomcat server host ip ".ljust(36," ")+bcolors.OKBLUE+"[Default:localhost]>"+bcolors.ENDC)
+            if not host.strip() or host.strip()=="localhost":
+                host="localhost"
+            
+            elif not re.search(r'^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$',host) and host.strip() :
                 print bcolors.FAIL+"Invalid IP. Please try again!"+bcolors.ENDC
                 continue
-            elif not host.strip() or host.strip()=="localhost":
-                host="localhost"
-
+            
             port=raw_input("Please enter tomcat server port ".ljust(40," ")+bcolors.OKBLUE+"[Default: 8080]>"+bcolors.ENDC)
             if not port.isdigit() and port.strip():
                 print bcolors.FAIL+"Invalid port number. Please try again!"+bcolors.ENDC
@@ -85,15 +88,15 @@ class TomcatAgent:
             elif not jmxport.strip():
                 jmxport="1099"
 
-            print "Host:".ljust(12," "),host
-            print "Port:".ljust(12," "),port
-            print "JMX Port:".ljust(12," "),jmxport
+            print "Host:".ljust(12," "),":",host
+            print "Port:".ljust(12," "),":",port
+            print "JMX Port:".ljust(12," "),":",jmxport
             res=raw_input("Please confirm your input "+bcolors.OKBLUE+"[y/n]>"+bcolors.ENDC)
             if res.capitalize()=="Y":
                 break
             else:
                 continue
-        
+
         try:
             tomcat_pid=subprocess.check_output("ps aux | grep -w org.apache.catalina.startup.Bootstrap | grep -v grep | awk '{ print $2 }'", shell=True)
         except:
@@ -102,30 +105,35 @@ class TomcatAgent:
             jmx_pid=subprocess.check_output("ps aux | grep jmx | grep -v grep | awk '{ print $2 }'",shell=True)
         except:
             jmx_pid=None
-        
-        while True:
-            tomcat_path=raw_input("\nPlease enter tomcat location to set environment variable in 'setenv.sh'"+ bcolors.OKBLUE+"(e.g./home/apache-x.x.x) >"+bcolors.ENDC)
-            if tomcat_path and os.path.exists(tomcat_path):
-                setenv_path=os.path.join(tomcat_path,"bin/setenv.sh")
-                with open(setenv_path,"a+") as f:
-                    if "CATALINA_OPTS" not in f.read() and jmxport not in f.read():
-                        f.write('CATALINA_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port={} -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"'.format(jmxport))
-                os.chmod(setenv_path, stat.S_IXUSR)
-                break
-            else:
-                print bcolors.FAIL+"Did you enter correct path? please check"+bcolors.ENDC
+        if jmx_pid is not None:
+            print bcolors.WARNING+"JMX not found!"+bcolors.ENDC
+            while True:
+                tomcat_path=raw_input("\nPlease enter tomcat location to set environment variable in 'setenv.sh'"+ bcolors.OKBLUE+"(e.g./home/apache-x.x.x) >"+bcolors.ENDC)
+                
+                if tomcat_path and os.path.exists(tomcat_path):
+                    setenv_path=os.path.join(tomcat_path,"bin/setenv.sh")
+                    if os.path.exists(os.path.join(tomcat_path,"bin")):
+                        with open(setenv_path,"a+") as f:
+                            if "CATALINA_OPTS" not in f.read() and jmxport not in f.read():
+                                f.write('CATALINA_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port={} -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"'.format(jmxport))
+                        os.chmod(setenv_path, 0o777)
+                        break
+                    else:
+                        print bcolors.FAIL+"'bin' directory not found. Please check the path"+bcolors.ENDC
+                else:
+                    print bcolors.FAIL+"Did you enter correct path? "+bcolors.ENDC
 
-        res=raw_input("Environmental variable was set."+bcolors.OKBLUE+"Need to restart tomcat. Do you want to continue?[y/n]>"+bcolors.ENDC)
-        if res.capitalize()=="Y":
-            startup=os.path.join(tomcat_path,"bin/tomcat.sh")
-            if os.path.exists(startup):
-                os.system("sudo kill -9 {} {}".format(tomcat_pid ,jmx_pid))
-                os.system("sh {}".format(startup))
-                print bcolors.OKGREEN+"Tomcat restared!"+bcolors.ENDC
+            res=raw_input("Environmental variable was set."+bcolors.OKBLUE+"Need to restart tomcat. Do you want to continue?[y/n]>"+bcolors.ENDC)
+            if res.capitalize()=="Y":
+                startup=os.path.join(tomcat_path,"bin/startup.sh")
+                if os.path.exists(startup):
+                    os.system("sudo kill -9 {} {}".format(tomcat_pid ,jmx_pid))
+                    os.system("sh {}".format(startup))
+                    print bcolors.OKGREEN+"Tomcat restared!"+bcolors.ENDC
+                else:
+                    print bcolors.FAIL+startup+" not found. Please restart tomcat manually"+bcolors.ENDC
             else:
-                print bcolors.FAIL+startup+" not found. Please restart tomcat manually"+bcolors.ENDC
-        else:
-            print bcolors.WARNING+"Please restart Tomcat manually"+bcolors.ENDC
+                print bcolors.WARNING+"Please restart tomcat manually"+bcolors.ENDC
         #Read the JSON
         with open(os.path.join(agents_path,self.config_path["metrics.json"],"metrics.json"),'r') as f:
             config_dict=json.load(f)
@@ -137,17 +145,17 @@ class TomcatAgent:
         #Write the JSON
         with open(os.path.join(agents_path,self.config_path["metrics.json"],"metrics.json"),'w') as f:
             json.dump(config_dict,f)
-        self.stopAgent()         
+        self.stopAgent()
         os.system("cp -R {} {}".format("serviceAgents/tomcatAgent/config", pwd))
         self.startAgent()
-        
+
     def status(self):
         try:
             agent_pid=subprocess.check_output("ps aux | grep -e N42tomcatAgent.jar | grep -v grep | awk '{print $2}'",shell=True)
         except:
             agent_pid=None
         return agent_pid
-    
+
     def startAgent(self):
         if self.status():
             print bcolors.OKGREEN+"The tomcat agent is running already"+bcolors.ENDC
@@ -155,12 +163,12 @@ class TomcatAgent:
             os.system("sh {} >> /dev/null 2>&1 &".format(agents_path,self.config_path["threadCount.sh"],"threadCount.sh"))
             os.system("nohup java -jar  {} >> /dev/null 2>&1 &".format(os.path.join(agents_path,self.config_path["N42tomcatAgent.jar"],"N42tomcatAgent.jar")))
             print bcolors.OKGREEN+"Tomcat agent started"+bcolors.ENDC
-                
+
     def stopAgent(self):
         for x in range(2):
             os.system("pkill -f {}".format("N42tomcatAgent.jar"))
         print bcolors.FAIL+"Tomcat agent killed"+bcolors.ENDC
-    
+
     def restartAgent(self):
         self.stopAgent()
         self.startAgent()
@@ -176,30 +184,35 @@ class MySQLAgent:
         Downloader(self.config_path,False)
 
     def configuration(self):
+        print bcolors.HEADER+"*****************MySQL Agent Installation*****************"+bcolors.ENDC
         while True:
-            print bcolors.HEADER+"\n*****************MySQL Agent Configuration*******************"+bcolors.ENDC
-            host=raw_input("Please enter MySQL server host ip "+bcolors.OKBLUE+"[Default:localhost]>"+bcolors.ENDC)
+            print ""
+            host=raw_input("Please enter MySQL server host ip ".ljust(37," ")+bcolors.OKBLUE+"[Default:localhost]>"+bcolors.ENDC)
             if not re.search(r'^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$',host) and host.strip() :
                 print bcolors.FAIL+"Invalid IP. Please try again!"+bcolors.ENDC
                 continue
             elif not host.strip():
                 host="localhost"
 
-            port=raw_input("Please enter MySQL server port "+bcolors.OKBLUE+"[Default: 3306]>"+bcolors.ENDC)
+            port=raw_input("Please enter MySQL server port ".ljust(40," ")+bcolors.OKBLUE+"[Default: 3306]>"+bcolors.ENDC)
             if not port.isdigit() and port.strip():
                 print bcolors.FAIL+"Invalid port number. Please try again!"+bcolors.ENDC
                 continue
             elif not port.strip():
                 port="3306"
 
-            username=raw_input("Please enter MySQL username "+bcolors.OKBLUE+"[Default: root]>"+bcolors.ENDC)
+            username=raw_input("Please enter MySQL username ".ljust(40," ")+bcolors.OKBLUE+"[Default: root]>"+bcolors.ENDC)
             if not username:
                 username="root"
 
-            password=getpass.getpass("Please enter MySQL password>")
-            print "Host:".ljust(12," "),host
-            print "Port:".ljust(12," "),port
-            print "Username:".ljust(12," "),username
+            password=getpass.getpass("Please enter MySQL password".ljust(55," ")+bcolors.OKBLUE+">"+bcolors.ENDC)
+            if not password.strip():
+                print bcolors.FAIL+"Password should not be empty. Please try again!"+bcolors.ENDC
+                continue
+            print "Host".ljust(12," "),":",host
+            print "Port".ljust(12," "),":",port
+            print "Username".ljust(12," "),":",username
+            print "Password".ljust(12," "),": ******"
             res=raw_input("Please confirm your input "+bcolors.OKBLUE+"[y/n]>"+bcolors.ENDC)
             if res.capitalize()=="Y":
                 break
@@ -218,19 +231,19 @@ class MySQLAgent:
 
         with open(os.path.join(agents_path,self.config_path["plugin.json"],"plugin.json"),'w') as f:
             json.dump(config_dict,f)
-        
+
         self.stopAgent()
         os.system("cp -R {} {}".format("serviceAgents/mysqlAgent/config", pwd))
         #print os.path.join(agents_path,self.config_path["N42mysqlAgent.jar"],"N42mysqlAgent.jar"),"<==Path"
         self.startAgent()
-        
+
     def status(self):
         try:
             agent_pid=subprocess.check_output("ps aux | grep -e N42mysqlAgent.jar | grep -v grep | awk '{print $2}'",shell=True)
         except:
             agent_pid=None
         return agent_pid
-    
+
     def startAgent(self):
         if self.status():
             print bcolors.OKGREEN+"MySQL agent is running already"+bcolors.ENDC
@@ -238,12 +251,12 @@ class MySQLAgent:
             return_status=os.system("nohup java -jar {} > /dev/null 2>&1 &".format(os.path.join(agents_path,self.config_path["N42mysqlAgent.jar"],"N42mysqlAgent.jar")))
             if return_status==0:
                 print bcolors.OKGREEN+"MySQL agent started"+bcolors.ENDC
-    
+
     def stopAgent(self):
         for x in range(2):
             os.system("pkill -f {}".format("N42mysqlAgent.jar"))
         print bcolors.FAIL+"MySQL agent killed!"+bcolors.ENDC
-    
+
     def restartAgent(self):
         self.stopAgent()
         self.startAgent()
@@ -276,7 +289,7 @@ class LogstashAgent:
                           "opsmx-oiq.conf":"/etc/logstash/conf.d",
                           "opentsdb.rb":"/opt/logstash/vendor/bundle/jruby/1.9/gems/logstash-output-opentsdb-2.0.4/lib/logstash/outputs/"
                           }
-    
+
     def downloader(self):
         for file, dir in self.config_path.items():
             desired_path=os.path.join(agents_path,dir,file)
@@ -287,11 +300,11 @@ class LogstashAgent:
                     pass
                 print "Downloading...",file
                 os.system("wget -q -O {0} https://rawgit.com/OpsMx/service_moniter/master/logstash/{1}".format(desired_path,file))
-                os.system("chmod 777 {}".format(os.path.join(desired_path,dir,file)))
-            
+                os.chmod(os.path.join(desired_path,dir,file),0o777)
+
 
     def configure(self):
-        print bcolors.HEADER+"\n*****************Logstash Agent Installation*****************"+bcolors.ENDC
+        print bcolors.HEADER+"\n*****************Logstash Installation*****************"+bcolors.ENDC
         try:
             logstash_pid=subprocess.check_output("ps aux | grep -v grep | grep logstash | awk '{print $2}'",shell=True)
         except:
@@ -317,6 +330,7 @@ class LogstashAgent:
                 os.system("service logstash stop")
             self.downloader()
             os.system("sudo service logstash restart")
+        print bcolors.BOLD+bcolors.WARNING+"NOTE: Please update log files location in config file (/etc/logstash/conf.d/) and set 'chmod 664' for those log files"+bcolors.ENDC
 
 def help():
     print bcolors.FAIL+"Invalid command line agruments"+bcolors.ENDC
@@ -363,13 +377,16 @@ if __name__=='__main__':
                 print bcolors.FAIL+"MySQL Agent".ljust(15,"."),"STOPPED"+bcolors.ENDC
         else:
             help()
-                
+
     else:
-        print bcolors.BOLD+bcolors.HEADER+"*****************OpsMx Agent Installation Menu(For Ubuntu)******************"+bcolors.ENDC
-        print bcolors.OKBLUE+"NOTE: For system agent, please use 'service monitoragent <start/stop/restart>'"+bcolors.ENDC
-        print bcolors.OKBLUE+"To control service agents use; python installer.py [status] [start | stop | restart tomcat | mysql]"+bcolors.ENDC
-        print "Please select an option to install agent(s)"
-        res=raw_input("1. Tomcat Agent \n2. MySQL Agent \n3. Logstash Agent  \n4. Install System Agent \n5. Remove System Agent \n6. All \n>")
+        print bcolors.BOLD+bcolors.HEADER+"\n*****************OpsMx Agent Installation Menu(For Ubuntu)*****************"+bcolors.ENDC
+        print bcolors.OKBLUE+"NOTE1: For system agent, please use 'service monitoragent [start | stop | restart]'"+bcolors.ENDC
+        print bcolors.OKBLUE+"NOTE2: To control service agents use; python installer.py [status] [start | stop | restart tomcat | mysql]"+bcolors.ENDC
+        print bcolors.FAIL+"NOTE3: Please run below MySQL queries in MySQL command line to give permissions to IP to pull metrics"+bcolors.ENDC
+        print bcolors.BOLD+"\nCREATE USER '<MySQL_User>'@'<MySQL_IP or localhost>' IDENTIFIED BY '<MySQL_Password>';"+bcolors.ENDC
+        print bcolors.BOLD+"GRANT ALL PRIVILEGES ON * TO '<MySQL_User>'@'<MySQL_IP or localhost>' WITH GRANT OPTION;"+bcolors.ENDC
+        print "\nPlease select an option to install agent(s)"
+        res=raw_input("1. Tomcat Agent \n2. MySQL Agent \n3. Logstash Agent  \n4. Install System Agent \n5. Remove System Agent \n6. All (Except 'Remove System Agent') \n>")
         if res=="1":
             tomcat=TomcatAgent()
             tomcat.configure()
@@ -394,4 +411,3 @@ if __name__=='__main__':
             sys.configure()
             logstash=LogstashAgent()
             logstash.configure()
-    
