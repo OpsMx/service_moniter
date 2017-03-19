@@ -1,5 +1,10 @@
 #!/bin/bash
 
+echo "*********Installing packages*********"
+sudo apt-get install -y python-pip python-dev build-essential
+sudo pip install potsdb
+sudo pip install boto
+
 echo "*********Installing apache2*********"
 sudo apt-get update
 sudo apt-get install apache2 -y 
@@ -39,7 +44,7 @@ echo
 
 echo '#!/bin/sh -e'>/etc/rc.local
 echo 
-echo 'sudo python /opt/tcollector/tcollector.py -H 52.8.104.253 -p 4343 -D'>>/etc/rc.local
+echo 'sudo python /opt/tcollector/tcollector.py -H 52.8.104.253 -p 4343 -D '>>/etc/rc.local
 echo 'sudo service logstash start'>>/etc/rc.local
 echo 'sudo service packetbeat start'>>/etc/rc.local
 echo 'exit 0'>>/etc/rc.local
