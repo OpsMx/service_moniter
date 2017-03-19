@@ -30,6 +30,12 @@ sudo apt-get install -y logstash
 sudo wget -O  /etc/logstash/conf.d/logstash.conf https://raw.githubusercontent.com/OpsMx/service_moniter/master/opsmx_logstash.conf
 sudo service logstash restart
 
+echo "*********Installing packetbeat*********"
+sudo wget -O /opt/packetbeat_install.sh https://raw.githubusercontent.com/OpsMx/server_monitor/master/packetbeat_install.sh && sudo bash /opt/packetbeat_install.sh
+
+echo "*********Installing sys-metrics*********"
+sudo wget -O /opt/agentinstall.sh https://raw.githubusercontent.com/OpsMx/server_monitor/master/agentinstall.sh && sudo bash /opt/agentinstall.sh
+echo 
 
 echo '#!/bin/sh -e'>/etc/rc.local
 echo 'sudo python /opt/tcollector/tcollector.py -H 52.8.104.253 -p 4343 -D'>>/etc/rc.local
