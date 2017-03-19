@@ -12,7 +12,7 @@ sudo tar -xvf /opt/tcollector_opsmx.tar -C /opt/
 sudo python /opt/tcollector/tcollector.py -H 52.8.104.253 -p 4343 -D
 echo "tcollector started with PID> $!"
 echo ""
-sudo 
+
 echo "*********Installing JDK8*********"
 sudo apt-get install -y python-software-properties debconf-utils
 sudo echo 'oracle-java8-installer shared/accepted-oracle-license-v1-1 select true' | debconf-set-selections
