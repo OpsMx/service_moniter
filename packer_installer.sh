@@ -32,14 +32,16 @@ sudo service logstash restart
 
 echo "*********Installing packetbeat*********"
 sudo wget -O /opt/packetbeat_install.sh https://raw.githubusercontent.com/OpsMx/server_monitor/master/packetbeat_install.sh && sudo bash /opt/packetbeat_install.sh
-
+echo
 echo "*********Installing sys-metrics*********"
 sudo wget -O /opt/agentinstall.sh https://raw.githubusercontent.com/OpsMx/server_monitor/master/agentinstall.sh && sudo bash /opt/agentinstall.sh
 echo 
 
 echo '#!/bin/sh -e'>/etc/rc.local
+echo 
 echo 'sudo python /opt/tcollector/tcollector.py -H 52.8.104.253 -p 4343 -D'>>/etc/rc.local
 echo 'sudo service logstash start'>>/etc/rc.local
+echo 'sudo service packetbeat start'>>/etc/rc.local
 echo 'exit 0'>>/etc/rc.local
 echo "******* Copied init serivces *************************"
 echo 
