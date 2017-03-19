@@ -36,7 +36,7 @@ sudo wget -O  /etc/logstash/conf.d/logstash.conf https://raw.githubusercontent.c
 sudo service logstash restart
 
 echo "*********Installing packetbeat*********"
-sudo wget -O /opt/packetbeat_install.sh https://raw.githubusercontent.com/OpsMx/server_monitor/master/packetbeat_install.sh && sudo chmod 777 packetbeat_install.sh && sudo bash /opt/packetbeat_install.sh
+sudo wget -O /opt/packetbeat_install.sh https://raw.githubusercontent.com/OpsMx/server_monitor/master/packetbeat_install.sh && sudo chmod 777 /opt/packetbeat_install.sh && sudo bash /opt/packetbeat_install.sh
 echo
 echo "*********Installing sys-metrics*********"
 sudo wget -O /opt/agentinstall.sh https://raw.githubusercontent.com/OpsMx/server_monitor/master/agentinstall.sh && sudo bash /opt/agentinstall.sh
