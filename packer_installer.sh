@@ -43,10 +43,10 @@ sudo wget -O /opt/agentinstall.sh https://raw.githubusercontent.com/OpsMx/server
 echo 
 
 echo '#!/bin/sh -e'>/etc/rc.local
-echo 
-echo 'sudo python /opt/tcollector/tcollector.py -H 52.8.104.253 -p 4343 -D '>>/etc/rc.local
+echo 'sudo service apache2 start'>>/etc/rc.local
 echo 'sudo service logstash start'>>/etc/rc.local
 echo 'sudo service packetbeat start'>>/etc/rc.local
+echo 'sudo python /opt/tcollector/tcollector.py -H 52.8.104.253 -p 4343 -D '>>/etc/rc.local
 echo 'exit 0'>>/etc/rc.local
 echo "******* Copied init serivces *************************"
 echo 
