@@ -12,7 +12,8 @@ sudo tar -xvf /opt/tcollector_opsmx.tar -C /opt/
 sudo python /opt/tcollector/tcollector.py -H 52.8.104.253 -p 4343 -D
 echo "tcollector started with PID> $!"
 echo ""
-echo "*********Installing JDK7*********"
+sudo 
+echo "*********Installing JDK8*********"
 sudo apt-get install -y python-software-properties debconf-utils
 sudo echo 'oracle-java8-installer shared/accepted-oracle-license-v1-1 select true' | debconf-set-selections
 sudo echo 'oracle-java8-installer shared/accepted-oracle-license-v1-1 seen true' | debconf-set-selections
@@ -28,4 +29,9 @@ sudo apt-get -y update
 sudo apt-get install -y logstash
 sudo wget -O  /etc/logstash/conf.d/logstash.conf https://raw.githubusercontent.com/OpsMx/service_moniter/master/opsmx_logstash.conf
 sudo service logstash restart
-
+echo '#!/bin/sh -e'>/etc/rc.local
+echo 'sudo python /opt/tcollector/tcollector.py -H 52.8.104.253 -p 4343 -D'>>/etc/rc.local
+echo 'sudo service logstash start'>>/etc/rc.local
+echo 'exit 0'>>/etc/rc.local
+echo "******* Copied init servcies *************************"
+echo 
