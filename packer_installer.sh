@@ -30,10 +30,10 @@ sudo apt-get install -y logstash
 sudo wget -O  /etc/logstash/conf.d/logstash.conf https://raw.githubusercontent.com/OpsMx/service_moniter/master/opsmx_logstash.conf
 sudo service logstash restart
 
-echo "******* Started init servcies *************************"
+
 echo '#!/bin/sh -e'>/etc/rc.local
 echo 'sudo python /opt/tcollector/tcollector.py -H 52.8.104.253 -p 4343 -D'>>/etc/rc.local
 echo 'sudo service logstash start'>>/etc/rc.local
 echo 'exit 0'>>/etc/rc.local
-echo "******* Copied init servcies *************************"
+echo "******* Copied init serivces *************************"
 echo 
