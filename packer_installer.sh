@@ -7,7 +7,6 @@ sudo tar -xvf /opt/tcollector_opsmx.tar -C /opt/
 sudo wget -O /etc/init.d/tcollector https://raw.githubusercontent.com/OpsMx/service_moniter/master/tcollector
 
 echo "*********Installing tcollector init scripts**************"
-#sed -i '/SCRIPT=/c\SCRIPT="python /opt/tcollector/tcollector.py -H 52.8.104.253 -p 4343 -D"' /home/tushar/Desktop/tcollector
 sudo chmod 777 /etc/init.d/tcollector
 update-rc.d tcollector defaults
 service tcollector start
