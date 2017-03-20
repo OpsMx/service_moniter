@@ -7,9 +7,9 @@ sudo tar -xvf /opt/tcollector_opsmx.tar -C /opt/
 sudo wget -O /etc/init.d/tcollector https://raw.githubusercontent.com/OpsMx/service_moniter/master/tcollector
 
 echo "*********Installing tcollector init scripts**************"
-sudo chmod 777 /etc/init.d/tcollector
-update-rc.d tcollector defaults
-service tcollector start
+sudo chmod 755 /etc/init.d/tcollector
+sudo update-rc.d tcollector defaults
+#service tcollector start
 
 echo "*********Installing Logstash*********"
 sudo echo 'deb http://packages.elastic.co/logstash/2.4/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash.list
@@ -21,14 +21,3 @@ sudo update-rc.d logstash defaults
 #sudo service logstash restart
 
 
-echo "*********Installing packetbeat*********"
-sudo wget -O /opt/packetbeat_install.sh https://raw.githubusercontent.com/OpsMx/server_monitor/master/packetbeat_install.sh && sudo chmod 777 /opt/packetbeat_install.sh && sudo bash /opt/packetbeat_install.sh
-echo
-
-echo '#!/bin/sh -e'>/etc/rc.local
-echo 'sudo /etc/init.d/logstash start'>>/etc/rc.local
-echo 'sudo /etc/init.d/tcollector start'>>/etc/rc.local
-echo 'sudo /etc/init.d/apache2 start'>>/etc/rc.local
-echo 'exit 0'>>/etc/rc.local
-
-sudo chmod 777 /etc/rc.local
