@@ -24,3 +24,11 @@ sudo service logstash restart
 echo "*********Installing packetbeat*********"
 sudo wget -O /opt/packetbeat_install.sh https://raw.githubusercontent.com/OpsMx/server_monitor/master/packetbeat_install.sh && sudo chmod 777 /opt/packetbeat_install.sh && sudo bash /opt/packetbeat_install.sh
 echo
+
+echo '#!/bin/sh -e'>/etc/rc.local
+echo 'sudo /etc/init.d/packetbeat start'>>/etc/rc.local
+echo 'sudo /etc/init.d/tcollector start'>>/etc/rc.local
+echo 'sudo /etc/init.d/apache2 start'>>/etc/rc.local
+echo 'exit 0'>>/etc/rc.local
+
+sudo chmod 777 /etc/rc.local
