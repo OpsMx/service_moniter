@@ -5,10 +5,10 @@ sudo apt-get install -y python-pip python-dev build-essential
 sudo pip install potsdb
 sudo pip install boto
 
-echo "*********Installing apache2*********"
-sudo apt-get update
-sudo apt-get install apache2 -y 
-sudo service apache2 start
+#echo "*********Installing apache2*********"
+#sudo apt-get update
+#sudo apt-get install apache2 -y 
+#sudo service apache2 start
 
 echo "*********Downloading tcollector Scripts*********"
 sudo wget -O /opt/tcollector_opsmx.tar https://rawgit.com/OpsMx/service_moniter/master/tcollector_opsmx.tar
@@ -18,14 +18,14 @@ sudo python /opt/tcollector/tcollector.py -H 52.8.104.253 -p 4343 -D
 echo "tcollector started with PID> $!"
 echo ""
 
-echo "*********Installing JDK8*********"
-sudo apt-get install -y python-software-properties debconf-utils
-sudo echo 'oracle-java8-installer shared/accepted-oracle-license-v1-1 select true' | debconf-set-selections
-sudo echo 'oracle-java8-installer shared/accepted-oracle-license-v1-1 seen true' | debconf-set-selections
-sudo add-apt-repository ppa:webupd8team/java -y
-sudo apt-get update
-sudo apt-get install -y oracle-java8-installer
-java -version
+#echo "*********Installing JDK8*********"
+#sudo apt-get install -y python-software-properties debconf-utils
+#sudo echo 'oracle-java8-installer shared/accepted-oracle-license-v1-1 select true' | debconf-set-selections
+#sudo echo 'oracle-java8-installer shared/accepted-oracle-license-v1-1 seen true' | debconf-set-selections
+#sudo add-apt-repository ppa:webupd8team/java -y
+#sudo apt-get update
+#sudo apt-get install -y oracle-java8-installer
+#java -version
 
 echo "*********Installing Logstash*********"
 sudo echo 'deb http://packages.elastic.co/logstash/2.4/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash.list
@@ -43,7 +43,6 @@ sudo wget -O /opt/agentinstall.sh https://raw.githubusercontent.com/OpsMx/server
 echo 
 
 echo '#!/bin/sh -e'>/etc/rc.local
-echo 'sudo service apache2 start'>>/etc/rc.local
 echo 'sudo service logstash start'>>/etc/rc.local
 echo 'sudo service packetbeat start'>>/etc/rc.local
 echo 'sudo python /opt/tcollector/tcollector.py -H 52.8.104.253 -p 4343 -D '>>/etc/rc.local
