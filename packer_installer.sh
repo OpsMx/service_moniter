@@ -17,7 +17,7 @@ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D27D666CD88E42B4
 sudo apt-get -y update
 sudo apt-get install -y logstash
 sudo wget -O  /etc/logstash/conf.d/logstash.conf https://raw.githubusercontent.com/OpsMx/service_moniter/master/opsmx_logstash.conf
-sudo update-rc.d tcollector defaults
+sudo update-rc.d logstash defaults
 #sudo service logstash restart
 
 
