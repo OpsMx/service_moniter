@@ -5,6 +5,7 @@ echo "*********Downloading tcollector scripts*********"
 sudo wget -O /opt/tcollector_opsmx.tar https://rawgit.com/OpsMx/service_moniter/master/tcollector_opsmx.tar
 sudo tar -xvf /opt/tcollector_opsmx.tar -C /opt/
 sudo wget -O /etc/init.d/tcollector https://raw.githubusercontent.com/OpsMx/service_moniter/master/tcollector
+sudo rm -rf /opt/tcollector_opsmx.tar
 
 echo "*********Installing tcollector init scripts**************"
 sudo chmod 755 /etc/init.d/tcollector
