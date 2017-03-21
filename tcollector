@@ -10,7 +10,7 @@
 
 #Follow standards https://wiki.debian.org/LSBInitScripts
 
-SCRIPT="python /opt/tcollector/tcollector.py -H 52.8.104.253 -p 4343 -D"
+SCRIPT="python /opt/tcollector/tcollector.py"
 #RUNAS=<USERNAME>
 
 NAME="tcollector"
