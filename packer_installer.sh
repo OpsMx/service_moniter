@@ -6,6 +6,17 @@ sudo tar -xvf /opt/tcollector_opsmx.tar -C /opt/
 sudo wget -O /etc/init.d/tcollector https://raw.githubusercontent.com/OpsMx/service_moniter/master/tcollector
 sudo rm -rf /opt/tcollector_opsmx.tar
 
+echo "*********Downloading Data Dog scripts*********"
+sudo apt-get update
+sudo apt-get install apt-transport-https
+sudo sh -c "echo 'deb https://apt.datadoghq.com/ stable main' > /etc/apt/sources.list.d/datadog.list"
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C7A7DA52 -y
+sudo apt-get update
+sudo apt-get install datadog-agent -y
+sudo sh -c "sed 's/api_key:.*/api_key: 584378ca8b6271fd813591f7e75ec784/' /etc/dd-agent/datadog.conf.example > /etc/dd-agent/datadog.conf"
+sudo /etc/init.d/datadog-agent start
+
+
 echo "*********Installing tcollector init scripts**************"
 sudo chmod 755 /etc/init.d/tcollector
 sudo update-rc.d tcollector defaults
