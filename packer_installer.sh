@@ -15,6 +15,11 @@ sudo apt-get update
 sudo apt-get install datadog-agent -y
 sudo sh -c "sed 's/api_key:.*/api_key: 584378ca8b6271fd813591f7e75ec784/' /etc/dd-agent/datadog.conf.example > /etc/dd-agent/datadog.conf"
 sudo /etc/init.d/datadog-agent start
+# Enabling Apache agent
+mv /etc/dd-agent/conf.d/apache.yaml /etc/dd-agent/conf.d/apache_backup.yaml
+wget -O /etc/dd-agent/conf.d/apache.yaml https://raw.githubusercontent.com/OpsMx/service_moniter/master/apache.yaml
+sudo /etc/init.d/datadog-agent info
+sudo /etc/init.d/datadog-agent restart
 
 
 echo "*********Installing tcollector init scripts**************"
