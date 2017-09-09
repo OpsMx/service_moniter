@@ -36,6 +36,13 @@ sudo wget -O  /etc/logstash/conf.d/logstash.conf https://raw.githubusercontent.c
 sudo chmod o+rx -R /var/log/apache2/
 sudo update-rc.d logstash defaults
 #sudo service logstash restart
+
+echo "****** multiservice war deployment*******"
+sudo aws s3 cp s3://opsmxpackages/monitoring-services.war /root/apache-tomcat-7.0.75/webapps/
+sudo apache-tomcat-7.0.75/bin/shutdown.sh
+sudo apache-tomcat-7.0.75/bin/startup.sh
+echo "apache-tomcat restarted"
+
 echo "********* Packer Installation Completed**********"
 
 
