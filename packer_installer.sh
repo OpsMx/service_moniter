@@ -29,8 +29,8 @@ sudo update-rc.d tcollector defaults
 
 echo "****** multiservice war deployment*******"
 sudo aws s3 cp s3://opsmxpackages/monitoring-services.war /root/apache-tomcat-7.0.75/webapps/
-sudo apache-tomcat-7.0.75/bin/shutdown.sh
-sudo apache-tomcat-7.0.75/bin/startup.sh
+sudo /root/apache-tomcat-7.0.75/bin/shutdown.sh
+sudo /root/apache-tomcat-7.0.75/bin/startup.sh
 echo "apache-tomcat restarted"
 
 #echo "*********Installing Logstash ***********"
