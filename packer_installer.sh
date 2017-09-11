@@ -27,7 +27,7 @@ sudo /etc/init.d/datadog-agent info
 sudo /etc/init.d/datadog-agent restart
 
 echo "****** multiservice war deployment*******"
-AWS_CONFIG_FILE=/home/ubuntu/.aws/config aws s3 cp s3://opsmxpackages/monitoring-services.war /root/apache-tomcat-7.0.75/webapps/
+AWS_CONFIG_FILE=/home/ubuntu/.aws/config aws --debug s3 cp s3://opsmxpackages/monitoring-services.war /root/apache-tomcat-7.0.75/webapps/
 sudo /root/apache-tomcat-7.0.75/bin/shutdown.sh
 sudo /root/apache-tomcat-7.0.75/bin/startup.sh
 echo "apache-tomcat restarted"
