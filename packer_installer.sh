@@ -6,6 +6,11 @@ sudo tar -xvf /opt/tcollector_opsmx.tar -C /opt/
 sudo wget -O /etc/init.d/tcollector https://raw.githubusercontent.com/OpsMx/service_moniter/master/tcollector
 sudo rm -rf /opt/tcollector_opsmx.tar
 
+echo "*********Installing tcollector init scripts**************"
+sudo chmod 755 /etc/init.d/tcollector
+sudo update-rc.d tcollector defaults
+#service tcollector start
+
 echo "*********Downloading Data Dog scripts*********"
 sudo apt-get update
 sudo apt-get install apt-transport-https
@@ -21,14 +26,8 @@ sudo wget -O /etc/dd-agent/conf.d/apache.yaml https://raw.githubusercontent.com/
 sudo /etc/init.d/datadog-agent info
 sudo /etc/init.d/datadog-agent restart
 
-
-echo "*********Installing tcollector init scripts**************"
-sudo chmod 755 /etc/init.d/tcollector
-sudo update-rc.d tcollector defaults
-#service tcollector start
-
 echo "****** multiservice war deployment*******"
-sudo aws s3 cp s3://opsmxpackages/monitoring-services.war /root/apache-tomcat-7.0.75/webapps/
+AWS_CONFIG_FILE=/home/ubuntu/.aws/config aws s3 cp s3://opsmxpackages/monitoring-services.war /root/apache-tomcat-7.0.75/webapps/
 sudo /root/apache-tomcat-7.0.75/bin/shutdown.sh
 sudo /root/apache-tomcat-7.0.75/bin/startup.sh
 echo "apache-tomcat restarted"
