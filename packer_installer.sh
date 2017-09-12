@@ -27,10 +27,10 @@ sudo /etc/init.d/datadog-agent info
 sudo /etc/init.d/datadog-agent restart
 
 echo "****** multiservice war deployment*******"
-sudo dpkg -i monitoring-services_2.0-1_all.deb
+#sudo dpkg -i monitoring-services_2.0-1_all.deb
 sudo /root/apache-tomcat-7.0.75/bin/shutdown.sh
 sudo /root/apache-tomcat-7.0.75/bin/startup.sh
-echo "apache-tomcat restarted"
+echo "apache-tomcat restarted...."
 
 #echo "*********Installing Logstash ***********"
 #sudo echo 'deb http://packages.elastic.co/logstash/2.4/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash.list
