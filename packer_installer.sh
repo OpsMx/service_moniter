@@ -15,7 +15,7 @@ echo "****** multiservice war deployment*******"
 #sudo dpkg -i monitoring-services_2.0-1_all.deb
 sudo /root/apache-tomcat-7.0.75/bin/shutdown.sh
 sudo /root/apache-tomcat-7.0.75/bin/startup.sh
-echo "apache-tomcat restarted...."
+3echo "apache-tomcat restarted...."
 
 echo "*********Downloading Data Dog scripts*********"
 sudo apt-get update
@@ -28,15 +28,15 @@ sudo wget -O /etc/dd-agent/conf.d/redisdb.yaml https://rawgit.com/OpsMx/service_
 sudo /etc/init.d/datadog-agent info
 sudo /etc/init.d/datadog-agent restart
 
-echo "*********Installing Logstash ***********"
-sudo echo 'deb http://packages.elastic.co/logstash/2.4/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash.list
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D27D666CD88E42B4
-sudo apt-get -y update
-sudo apt-get install -y logstash
-sudo wget -O  /etc/logstash/conf.d/logstash.conf https://raw.githubusercontent.com/OpsMx/service_moniter/master/opsmx_logstash.conf
-sudo chmod o+rx -R /var/log/apache2/
-sudo update-rc.d logstash defaults
-sudo service logstash restart
+#echo "*********Installing Logstash ***********"
+#sudo echo 'deb http://packages.elastic.co/logstash/2.4/debian stable main' | sudo tee /etc/apt/sources.list.d/logstash.list
+#sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys D27D666CD88E42B4
+#sudo apt-get -y update
+#sudo apt-get install -y logstash
+#sudo wget -O  /etc/logstash/conf.d/logstash.conf https://raw.githubusercontent.com/OpsMx/service_moniter/master/opsmx_logstash.conf
+#sudo chmod o+rx -R /var/log/apache2/
+#sudo update-rc.d logstash defaults
+#sudo service logstash restart
 
 echo "********* Packer Installation Completed**********"
 
