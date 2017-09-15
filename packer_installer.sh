@@ -15,7 +15,7 @@ echo "****** multiservice war deployment*******"
 #sudo dpkg -i monitoring-services_2.0-1_all.deb
 sudo /root/apache-tomcat-7.0.75/bin/shutdown.sh
 sudo /root/apache-tomcat-7.0.75/bin/startup.sh
-3echo "apache-tomcat restarted...."
+echo "apache-tomcat restarted...."
 
 echo "*********Downloading Data Dog scripts*********"
 sudo apt-get update
