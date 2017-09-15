@@ -1,7 +1,7 @@
 init_config:
 
 instances:
-  - host: localhost
+  - host: 52.53.65.44
     port: 6379
 
     # Can be used in lieu of host/port
